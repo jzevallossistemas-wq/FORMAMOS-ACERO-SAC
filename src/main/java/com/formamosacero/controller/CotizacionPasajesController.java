@@ -2,6 +2,7 @@ package com.formamosacero.controller;
 
 import com.formamosacero.models.CotizacionPasajes;
 import com.formamosacero.services.CotizacionPasajesService;
+import com.formamosacero.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,9 @@ public class CotizacionPasajesController {
     @Autowired
     private CotizacionPasajesService cotizacionPasajesService;
 
+    @Autowired
+    private ClienteService clienteService;
+
     @GetMapping
     public String listar(Model model) {
         List<CotizacionPasajes> cotizaciones = cotizacionPasajesService.obtenerTodos();
@@ -29,6 +33,7 @@ public class CotizacionPasajesController {
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("cotizacionPasajes", new CotizacionPasajes());
+        model.addAttribute("clientes", clienteService.obtenerTodos());
         return "cotizacionPasajes/formulario";
     }
 
@@ -54,6 +59,7 @@ public class CotizacionPasajesController {
         Optional<CotizacionPasajes> cotizacionPasajes = cotizacionPasajesService.obtenerPorId(id);
         if (cotizacionPasajes.isPresent()) {
             model.addAttribute("cotizacionPasajes", cotizacionPasajes.get());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
             return "cotizacionPasajes/formulario";
         }
         return "redirect:/cotizacion-pasajes";

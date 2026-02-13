@@ -2,6 +2,7 @@ package com.formamosacero.controller;
 
 import com.formamosacero.models.SolicitudEfectivo;
 import com.formamosacero.services.SolicitudEfectivoService;
+import com.formamosacero.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,9 @@ public class SolicitudEfectivoController {
     @Autowired
     private SolicitudEfectivoService solicitudEfectivoService;
 
+    @Autowired
+    private ClienteService clienteService;
+
     @GetMapping
     public String listar(Model model) {
         List<SolicitudEfectivo> solicitudes = solicitudEfectivoService.obtenerTodos();
@@ -29,6 +33,7 @@ public class SolicitudEfectivoController {
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("solicitudEfectivo", new SolicitudEfectivo());
+        model.addAttribute("clientes", clienteService.obtenerTodos());
         return "solicitudEfectivo/formulario";
     }
 
@@ -54,6 +59,7 @@ public class SolicitudEfectivoController {
         Optional<SolicitudEfectivo> solicitudEfectivo = solicitudEfectivoService.obtenerPorId(id);
         if (solicitudEfectivo.isPresent()) {
             model.addAttribute("solicitudEfectivo", solicitudEfectivo.get());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
             return "solicitudEfectivo/formulario";
         }
         return "redirect:/solicitud-efectivo";

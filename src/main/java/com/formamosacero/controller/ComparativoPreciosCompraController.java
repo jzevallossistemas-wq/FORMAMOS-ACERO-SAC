@@ -2,6 +2,8 @@ package com.formamosacero.controller;
 
 import com.formamosacero.models.ComparativoPreciosCompra;
 import com.formamosacero.services.ComparativoPreciosCompraService;
+import com.formamosacero.services.ClienteService;
+import com.formamosacero.services.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,12 @@ public class ComparativoPreciosCompraController {
     @Autowired
     private ComparativoPreciosCompraService comparativoPreciosCompraService;
 
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private ProveedorService proveedorService;
+
     @GetMapping
     public String listar(Model model) {
         List<ComparativoPreciosCompra> comparativos = comparativoPreciosCompraService.obtenerTodos();
@@ -29,6 +37,8 @@ public class ComparativoPreciosCompraController {
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("comparativoPreciosCompra", new ComparativoPreciosCompra());
+        model.addAttribute("clientes", clienteService.obtenerTodos());
+        model.addAttribute("proveedores", proveedorService.obtenerTodos());
         return "comparativoPreciosCompra/formulario";
     }
 
@@ -54,6 +64,8 @@ public class ComparativoPreciosCompraController {
         Optional<ComparativoPreciosCompra> comparativoPreciosCompra = comparativoPreciosCompraService.obtenerPorId(id);
         if (comparativoPreciosCompra.isPresent()) {
             model.addAttribute("comparativoPreciosCompra", comparativoPreciosCompra.get());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
+            model.addAttribute("proveedores", proveedorService.obtenerTodos());
             return "comparativoPreciosCompra/formulario";
         }
         return "redirect:/comparativo-precios-compra";

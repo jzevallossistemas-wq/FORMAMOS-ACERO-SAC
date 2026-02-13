@@ -2,6 +2,8 @@ package com.formamosacero.controller;
 
 import com.formamosacero.models.Orden;
 import com.formamosacero.services.OrdenService;
+import com.formamosacero.services.ClienteService;
+import com.formamosacero.services.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,12 @@ public class OrdenController {
     @Autowired
     private OrdenService ordenService;
 
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private ProveedorService proveedorService;
+
     @GetMapping
     public String listar(Model model) {
         List<Orden> ordenes = ordenService.obtenerTodos();
@@ -29,6 +37,8 @@ public class OrdenController {
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("orden", new Orden());
+        model.addAttribute("clientes", clienteService.obtenerTodos());
+        model.addAttribute("proveedores", proveedorService.obtenerTodos());
         return "orden/formulario";
     }
 
@@ -54,6 +64,8 @@ public class OrdenController {
         Optional<Orden> orden = ordenService.obtenerPorId(id);
         if (orden.isPresent()) {
             model.addAttribute("orden", orden.get());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
+            model.addAttribute("proveedores", proveedorService.obtenerTodos());
             return "orden/formulario";
         }
         return "redirect:/orden";

@@ -2,6 +2,7 @@ package com.formamosacero.controller;
 
 import com.formamosacero.models.SolicitudViatico;
 import com.formamosacero.services.SolicitudViaticoService;
+import com.formamosacero.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,9 @@ public class SolicitudViaticoController {
     @Autowired
     private SolicitudViaticoService solicitudViaticoService;
 
+    @Autowired
+    private ClienteService clienteService;
+
     @GetMapping
     public String listar(Model model) {
         List<SolicitudViatico> solicitudes = solicitudViaticoService.obtenerTodos();
@@ -29,6 +33,7 @@ public class SolicitudViaticoController {
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("solicitudViatico", new SolicitudViatico());
+        model.addAttribute("clientes", clienteService.obtenerTodos());
         return "solicitudViatico/formulario";
     }
 
@@ -54,6 +59,7 @@ public class SolicitudViaticoController {
         Optional<SolicitudViatico> solicitudViatico = solicitudViaticoService.obtenerPorId(id);
         if (solicitudViatico.isPresent()) {
             model.addAttribute("solicitudViatico", solicitudViatico.get());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
             return "solicitudViatico/formulario";
         }
         return "redirect:/solicitud-viatico";

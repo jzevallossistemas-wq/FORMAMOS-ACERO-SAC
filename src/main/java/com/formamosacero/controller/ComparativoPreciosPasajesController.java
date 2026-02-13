@@ -2,6 +2,7 @@ package com.formamosacero.controller;
 
 import com.formamosacero.models.ComparativoPreciosPasajes;
 import com.formamosacero.services.ComparativoPreciosPasajesService;
+import com.formamosacero.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,9 @@ public class ComparativoPreciosPasajesController {
     @Autowired
     private ComparativoPreciosPasajesService comparativoPreciosPasajesService;
 
+    @Autowired
+    private ClienteService clienteService;
+
     @GetMapping
     public String listar(Model model) {
         List<ComparativoPreciosPasajes> comparativos = comparativoPreciosPasajesService.obtenerTodos();
@@ -29,6 +33,7 @@ public class ComparativoPreciosPasajesController {
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("comparativoPreciosPasajes", new ComparativoPreciosPasajes());
+        model.addAttribute("clientes", clienteService.obtenerTodos());
         return "comparativoPreciosPasajes/formulario";
     }
 
@@ -54,6 +59,7 @@ public class ComparativoPreciosPasajesController {
         Optional<ComparativoPreciosPasajes> comparativoPreciosPasajes = comparativoPreciosPasajesService.obtenerPorId(id);
         if (comparativoPreciosPasajes.isPresent()) {
             model.addAttribute("comparativoPreciosPasajes", comparativoPreciosPasajes.get());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
             return "comparativoPreciosPasajes/formulario";
         }
         return "redirect:/comparativo-precios-pasajes";

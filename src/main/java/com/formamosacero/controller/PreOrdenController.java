@@ -2,6 +2,8 @@ package com.formamosacero.controller;
 
 import com.formamosacero.models.PreOrden;
 import com.formamosacero.services.PreOrdenService;
+import com.formamosacero.services.ClienteService;
+import com.formamosacero.services.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,12 @@ public class PreOrdenController {
     @Autowired
     private PreOrdenService preOrdenService;
 
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private ProveedorService proveedorService;
+
     @GetMapping
     public String listar(Model model) {
         List<PreOrden> preOrdenes = preOrdenService.obtenerTodos();
@@ -29,6 +37,8 @@ public class PreOrdenController {
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("preOrden", new PreOrden());
+        model.addAttribute("clientes", clienteService.obtenerTodos());
+        model.addAttribute("proveedores", proveedorService.obtenerTodos());
         return "preorden/formulario";
     }
 
@@ -54,6 +64,8 @@ public class PreOrdenController {
         Optional<PreOrden> preOrden = preOrdenService.obtenerPorId(id);
         if (preOrden.isPresent()) {
             model.addAttribute("preOrden", preOrden.get());
+            model.addAttribute("clientes", clienteService.obtenerTodos());
+            model.addAttribute("proveedores", proveedorService.obtenerTodos());
             return "preorden/formulario";
         }
         return "redirect:/preorden";
