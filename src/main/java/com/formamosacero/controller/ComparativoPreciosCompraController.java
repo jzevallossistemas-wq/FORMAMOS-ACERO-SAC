@@ -1,0 +1,100 @@
+package com.formamosacero.controller;
+
+import com.formamosacero.models.ComparativoPreciosCompra;
+import com.formamosacero.services.ComparativoPreciosCompraService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@Controller
+@RequestMapping("/comparativopreciocompra")
+public class ComparativoPreciosCompraController {
+    
+    @Autowired
+    private ComparativoPreciosCompraService comparativoService;
+    
+    @GetMapping
+    public String listar(Model model, 
+                        @RequestParam(required = false) String buscar,
+                        @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<ComparativoPreciosCompra> comparativosPage = comparativoService.obtenerTodos(pageable);
+        
+        model.addAttribute("items", comparativosPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", comparativosPage.getTotalPages());
+        model.addAttribute("totalItems", comparativosPage.getTotalElements());
+        model.addAttribute("buscar", buscar);
+        
+        return "comparativopreciocompra/lista";
+    }
+    
+    @GetMapping("/nuevo")
+    public String nuevo(Model model) {
+        model.addAttribute("comparativo", new ComparativoPreciosCompra());
+        model.addAttribute("esNuevo", true);
+        return "comparativopreciocompra/formulario";
+    }
+    
+    @PostMapping
+    public String guardar(@ModelAttribute ComparativoPreciosCompra comparativo, RedirectAttributes redirectAttributes) {
+        try {
+            comparativoService.guardar(comparativo);
+            redirectAttributes.addFlashAttribute("mensaje", "Comparativo guardado exitosamente");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al guardar comparativo: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
+        return "redirect:/comparativopreciocompra";
+    }
+    
+    @GetMapping("/{id}/editar")
+    public String editar(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
+        ComparativoPreciosCompra comparativo = comparativoService.obtenerPorId(id).orElse(null);
+        if (comparativo == null) {
+            redirectAttributes.addFlashAttribute("mensaje", "Comparativo no encontrado");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            return "redirect:/comparativopreciocompra";
+        }
+        model.addAttribute("comparativo", comparativo);
+        model.addAttribute("esNuevo", false);
+        return "comparativopreciocompra/formulario";
+    }
+    
+    @PostMapping("/{id}")
+    public String actualizar(@PathVariable Long id, @ModelAttribute ComparativoPreciosCompra comparativo, RedirectAttributes redirectAttributes) {
+        try {
+            ComparativoPreciosCompra actualizado = comparativoService.actualizar(id, comparativo);
+            if (actualizado != null) {
+                redirectAttributes.addFlashAttribute("mensaje", "Comparativo actualizado exitosamente");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            } else {
+                redirectAttributes.addFlashAttribute("mensaje", "Comparativo no encontrado");
+                redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al actualizar comparativo: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
+        return "redirect:/comparativopreciocompra";
+    }
+    
+    @GetMapping("/{id}/eliminar")
+    public String eliminar(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            comparativoService.eliminar(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Comparativo eliminado exitosamente");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al eliminar comparativo: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+        }
+        return "redirect:/comparativopreciocompra";
+    }
+}

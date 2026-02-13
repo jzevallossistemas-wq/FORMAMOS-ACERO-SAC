@@ -3,6 +3,8 @@ package com.formamosacero.services;
 import com.formamosacero.models.Proveedor;
 import com.formamosacero.repositories.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,10 @@ public class ProveedorService {
 
     @Autowired
     private ProveedorRepository proveedorRepository;
+
+    public Page<Proveedor> obtenerTodos(Pageable pageable) {
+        return proveedorRepository.findAll(pageable);
+    }
 
     public List<Proveedor> obtenerTodos() {
         return proveedorRepository.findAll();
