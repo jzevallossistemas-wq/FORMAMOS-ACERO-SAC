@@ -1,50 +1,65 @@
 package com.formamosacero.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import java.util.List;
+import com.formamosacero.model.Cliente;
+import com.formamosacero.service.ClienteService;
 
-@RestController
-@RequestMapping("/clientes")
+@Controller
+@RequestMapping("/cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService clienteService;
 
-    // Create a new Cliente
-    @PostMapping
-    public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
-        Cliente createdCliente = clienteService.create(cliente);
-        return ResponseEntity.status(201).body(createdCliente);
-    }
-
-    // Get all Clientes
+    // Endpoint to list clientes with pagination
     @GetMapping
-    public ResponseEntity<List<Cliente>> getAllClientes() {
-        List<Cliente> clientes = clienteService.getAll();
-        return ResponseEntity.ok(clientes);
+    public ModelAndView listClientes(@RequestParam(defaultValue = "0") int page) {
+        Page<Cliente> clientes = clienteService.findAll(PageRequest.of(page, 10));
+        ModelAndView mav = new ModelAndView("cliente/list");
+        mav.addObject("clientes", clientes);
+        return mav;
     }
 
-    // Get a single Cliente by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Cliente> getClienteById(@PathVariable Long id) {
-        Cliente cliente = clienteService.getById(id);
-        return ResponseEntity.ok(cliente);
+    // Endpoint to show create form
+    @GetMapping("/nuevo")
+    public String showCreateForm(Model model) {
+        model.addAttribute("cliente", new Cliente());
+        return "cliente/create";
     }
 
-    // Update an existing Cliente
-    @PutMapping("/{id}")
-    public ResponseEntity<Cliente> updateCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Cliente updatedCliente = clienteService.update(id, cliente);
-        return ResponseEntity.ok(updatedCliente);
+    // Endpoint to save new cliente
+    @PostMapping
+    public String saveCliente(@ModelAttribute Cliente cliente) {
+        clienteService.save(cliente);
+        return "redirect:/cliente";
     }
 
-    // Delete a Cliente
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCliente(@PathVariable Long id) {
+    // Endpoint to show edit form
+    @GetMapping("/{id}/editar")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Cliente cliente = clienteService.findById(id);
+        model.addAttribute("cliente", cliente);
+        return "cliente/edit";
+    }
+
+    // Endpoint to update cliente
+    @PostMapping("/{id}")
+    public String updateCliente(@PathVariable Long id, @ModelAttribute Cliente cliente) {
+        cliente.setId(id);
+        clienteService.update(cliente);
+        return "redirect:/cliente";
+    }
+
+    // Endpoint to delete cliente
+    @GetMapping("/{id}/eliminar")
+    public String deleteCliente(@PathVariable Long id) {
         clienteService.delete(id);
-        return ResponseEntity.noContent().build();
+        return "redirect:/cliente";
     }
 }
