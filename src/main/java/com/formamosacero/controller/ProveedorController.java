@@ -1,50 +1,43 @@
 package com.formamosacero.controller;
-
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @Controller
 @RequestMapping("/proveedor")
 public class ProveedorController {
-
-    // Dummy service for list of proveedores
-    private List<String> proveedores = List.of("Proveedor1", "Proveedor2");
-
     @GetMapping
-    public String listProveedores(Model model) {
-        model.addAttribute("proveedores", proveedores);
-        return "proveedor/list"; // Path to the list view
+    public String listarProveedores(Model model) {
+        model.addAttribute("titulo", "Listado de Proveedores");
+        return "proveedor/list";
     }
 
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("proveedor", new Proveedor()); // Assuming Proveedor is a model class
-        return "proveedor/create"; // Path to the create form view
+    @GetMapping("/nuevo")
+    public String crearProveedor(Model model) {
+        model.addAttribute("titulo", "Crear Proveedor");
+        return "proveedor/create";
     }
 
-    @PostMapping
-    public String saveProveedor(@ModelAttribute Proveedor proveedor) {
-        // Code to save the proveedor
-        return "redirect:/proveedor"; // Redirect to the list
+    @PostMapping("/guardar")
+    public String guardarProveedor(@RequestParam String nombre, Model model) {
+        model.addAttribute("mensaje", "Proveedor guardado correctamente");
+        return "redirect:/proveedor";
     }
 
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
-        // Fetch the proveedor by id and add to model
-        model.addAttribute("proveedor", proveedor);
-        return "proveedor/edit"; // Path to the edit form view
+    @GetMapping("/{id}/editar")
+    public String editarProveedor(@PathVariable Long id, Model model) {
+        model.addAttribute("titulo", "Editar Proveedor");
+        model.addAttribute("id", id);
+        return "proveedor/edit";
     }
 
-    @PostMapping("/update/{id}")
-    public String updateProveedor(@PathVariable("id") Long id, @ModelAttribute Proveedor proveedor) {
-        // Code to update the proveedor
-        return "redirect:/proveedor"; // Redirect to the list
+    @PostMapping("/actualizar")
+    public String actualizarProveedor(@RequestParam Long id, @RequestParam String nombre) {
+        return "redirect:/proveedor";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteProveedor(@PathVariable("id") Long id) {
-        // Code to delete proveedor
-        return "redirect:/proveedor"; // Redirect to the list
+    @DeleteMapping("/{id}")
+    public String eliminarProveedor(@PathVariable Long id) {
+        return "redirect:/proveedor";
     }
 }
