@@ -1,126 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes - FORMAMOS ACERO SAC</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { background-color: #f5f5f5; }
-        .navbar { background: linear-gradient(135deg, #ff8c00, #ff9f1c); }
-        .card { border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .table { background: white; }
-        .btn-primary { background-color: #667eea; border: none; }
-        .btn-primary:hover { background-color: #5568d3; }
-    </style>
+    <title>List of Clientes</title>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">🏭 FORMAMOS ACERO SAC</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/cliente">👥 Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/proveedor">🏢 Proveedores</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/preorden">📋 Pre Órdenes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/orden">📦 Órdenes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/solicitudefectivo">💵 Solicitudes Efectivo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/solicitudviatico">✈️ Solicitudes Viático</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h2><i class="fas fa-users"></i> Gestión de Clientes</h2>
-            </div>
-            <div class="col-md-4 text-end">
-                <a href="/cliente/nuevo" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Crear Nuevo Cliente
-                </a>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <form method="get" action="/cliente" class="mb-3">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <input type="text" name="buscar" class="form-control" placeholder="Buscar por nombre, DNI o RUC..." 
-                                   th:value="${buscar}">
-                        </div>
-                        <div class="col-md-6">
-                            <button type="submit" class="btn btn-primary w-100">
-                                <i class="fas fa-search"></i> Buscar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Nombre</th>
-                                <th>DNI/RUC</th>
-                                <th>Email</th>
-                                <th>Teléfono</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="cliente : ${clientes.content}">
-                                <td th:text="${cliente.id}">1</td>
-                                <td th:text="${cliente.nombre}">Nombre</td>
-                                <td th:text="${cliente.dni}">DNI</td>
-                                <td th:text="${cliente.email}">email@example.com</td>
-                                <td th:text="${cliente.telefono}">999999999</td>
-                                <td>
-                                    <span class="badge bg-success" th:if="${cliente.estado == 'Activo'}">Activo</span>
-                                    <span class="badge bg-danger" th:if="${cliente.estado == 'Inactivo'}">Inactivo</span>
-                                </td>
-                                <td>
-                                    <a th:href="@{/cliente/{id}/editar(id=${cliente.id})}" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a th:href="@{/cliente/{id}/eliminar(id=${cliente.id})}" class="btn btn-sm btn-danger"
-                                       onclick="return confirm('¿Está seguro de eliminar?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <nav th:if="${clientes.totalPages > 1}">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${clientes.first} ? 'disabled'">
-                            <a class="page-link" th:href="@{/cliente(page=0)}">Primera</a>
-                        </li>
-                        <li class="page-item" th:classappend="${!clientes.hasPrevious()} ? 'disabled'">
-                            <a class="page-link" th:href="@{/cliente(page=${clientes.number - 1})}">Anterior</a>
-                        </li>
-                        <li class="page-item" th:classappend="${!clientes.hasNext()} ? 'disabled'">
-                            <a class="page-link" th:href="@{/cliente(page=${clientes.number + 1})}">Siguiente</a>
-                        </li>
-                        <li class="page-item" th:classappend="${clientes.last} ? 'disabled'">
-                            <a class="page-link" th:href="@{/cliente(page=${clientes.totalPages - 1})}">Última</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <h1>List of Clientes</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Clientes will be listed here -->
+        </tbody>
+    </table>
 </body>
 </html>
