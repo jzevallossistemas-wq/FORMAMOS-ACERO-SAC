@@ -64,6 +64,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+# Configuración CORS (opcional)
+cors:
+  allowed-origins: http://localhost:3000,http://localhost:4200,https://your-production-domain.com
 ```
 
 ### Crear la Base de Datos
@@ -156,10 +160,15 @@ El sistema incluye validaciones personalizadas:
 ## Configuración CORS
 
 El sistema está configurado para permitir peticiones desde:
-- http://localhost:3000
-- http://localhost:4200
+- http://localhost:3000 (por defecto)
+- http://localhost:4200 (por defecto)
 
-Modificar en `CorsConfig.java` para agregar más orígenes.
+Para configurar orígenes personalizados en producción, agregar la siguiente propiedad en `application.yml`:
+
+```yaml
+cors:
+  allowed-origins: https://your-domain.com,https://another-domain.com
+```
 
 ## Contribuir
 
