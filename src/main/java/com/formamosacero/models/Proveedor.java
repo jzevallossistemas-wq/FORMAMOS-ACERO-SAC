@@ -1,75 +1,78 @@
 package com.formamosacero.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "proveedor")
+@Table(name = "proveedor", indexes = {
+    @Index(name = "idx_proveedor_ruc", columnList = "ruc"),
+    @Index(name = "idx_proveedor_razon_social", columnList = "razon_social")
+})
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Proveedor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+    @NotBlank(message = "El RUC es obligatorio")
+    @Column(name = "ruc", nullable = false, unique = true, length = 11)
+    private String ruc;
 
-    @Column(name = "direccion")
-    private String direccion;
+    @NotBlank(message = "La razón social es obligatoria")
+    @Column(name = "razon_social", nullable = false, length = 200)
+    private String razonSocial;
 
-    @Column(name = "telefono")
-    private String telefono;
+    @Column(name = "contacto", length = 100)
+    private String contacto;
 
-    @Column(name = "email")
+    @Email(message = "Email inválido")
+    @Column(name = "email", length = 100)
     private String email;
 
-    // Constructors
-    public Proveedor() {}
+    @Column(name = "telefono", length = 20)
+    private String telefono;
 
-    public Proveedor(String nombre, String direccion, String telefono, String email) {
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.telefono = telefono;
-        this.email = email;
+    @Column(name = "direccion", length = 255)
+    private String direccion;
+
+    @Column(name = "ciudad", length = 100)
+    private String ciudad;
+
+    @Column(name = "pais", length = 100)
+    private String pais;
+
+    @Column(name = "tipo_proveedor", length = 50)
+    private String tipoProveedor;
+
+    @Column(name = "categoria", length = 50)
+    private String categoria;
+
+    @Column(name = "estado", length = 20)
+    private String estado = "ACTIVO";
+
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = "fecha_modificacion")
+    private LocalDateTime fechaModificacion;
+
+    @PrePersist
+    protected void onCreate() {
+        fechaCreacion = LocalDateTime.now();
+        fechaModificacion = LocalDateTime.now();
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    @PreUpdate
+    protected void onUpdate() {
+        fechaModificacion = LocalDateTime.now();
     }
 }

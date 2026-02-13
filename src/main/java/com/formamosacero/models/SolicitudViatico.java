@@ -12,15 +12,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "solicitud_gasto_viaje", indexes = {
-    @Index(name = "idx_sol_gasto_viaje_numero", columnList = "numero"),
-    @Index(name = "idx_sol_gasto_viaje_fecha", columnList = "fecha"),
-    @Index(name = "idx_sol_gasto_viaje_estado", columnList = "estado")
+@Table(name = "solicitud_viatico", indexes = {
+    @Index(name = "idx_sol_viatico_numero", columnList = "numero"),
+    @Index(name = "idx_sol_viatico_fecha", columnList = "fecha"),
+    @Index(name = "idx_sol_viatico_estado", columnList = "estado")
 })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolicitudGastoViaje {
+public class SolicitudViatico {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,14 +41,11 @@ public class SolicitudGastoViaje {
     @Column(name = "solicitante", length = 100)
     private String solicitante;
 
-    @Column(name = "cargo", length = 100)
-    private String cargo;
-
     @Column(name = "area", length = 100)
     private String area;
 
-    @Column(name = "motivo", columnDefinition = "TEXT")
-    private String motivo;
+    @Column(name = "destino", length = 255)
+    private String destino;
 
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
@@ -56,11 +53,11 @@ public class SolicitudGastoViaje {
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
-    @Column(name = "destino", length = 255)
-    private String destino;
-
     @Column(name = "ruta", length = 500)
     private String ruta;
+
+    @Column(name = "tipo_transporte", length = 50)
+    private String tipoTransporte;
 
     @Column(name = "combustible", precision = 10, scale = 2)
     private BigDecimal combustible = BigDecimal.ZERO;
