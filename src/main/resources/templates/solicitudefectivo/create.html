@@ -1,26 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear Solicitud de Efectivo</title>
+    <title>Create Solicitud de Efectivo</title>
 </head>
 <body>
-    <h1>Crear Solicitud de Efectivo</h1>
-    <form action="/solicitudefectivo/guardar" method="POST">
-        <label for="numero">Número:</label><br>
-        <input type="text" id="numero" name="numero" required><br><br>
+    <h1>Create Solicitud de Efectivo</h1>
+    <form action="/submit-solicitud" method="post">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required><br><br>
 
-        <label for="fecha">Fecha:</label><br>
-        <input type="datetime-local" id="fecha" name="fecha" required><br><br>
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" rows="4" cols="50" required></textarea><br><br>
 
-        <label for="estado">Estado:</label><br>
-        <input type="text" id="estado" name="estado" required><br><br>
-
-        <label for="monto">Monto:</label><br>
-        <input type="number" id="monto" name="monto" step="0.01" required><br><br>
-
-        <input type="submit" value="Crear Solicitud">
+        <input type="submit" value="Create Solicitud">
     </form>
 </body>
 </html>
