@@ -31,7 +31,7 @@ public class ComparativoPreciosCompraController {
     public String listar(Model model) {
         List<ComparativoPreciosCompra> comparativos = comparativoPreciosCompraService.obtenerTodos();
         model.addAttribute("comparativos", comparativos);
-        return "comparativoPreciosCompra/lista";
+        return "comparativopreciocompra/lista";
     }
 
     @GetMapping("/new")
@@ -39,7 +39,7 @@ public class ComparativoPreciosCompraController {
         model.addAttribute("comparativoPreciosCompra", new ComparativoPreciosCompra());
         model.addAttribute("clientes", clienteService.obtenerTodos());
         model.addAttribute("proveedores", proveedorService.obtenerTodos());
-        return "comparativoPreciosCompra/formulario";
+        return "comparativopreciocompra/formulario";
     }
 
     @PostMapping
@@ -54,7 +54,7 @@ public class ComparativoPreciosCompraController {
         Optional<ComparativoPreciosCompra> comparativoPreciosCompra = comparativoPreciosCompraService.obtenerPorId(id);
         if (comparativoPreciosCompra.isPresent()) {
             model.addAttribute("comparativoPreciosCompra", comparativoPreciosCompra.get());
-            return "comparativoPreciosCompra/detalle";
+            return "comparativopreciocompra/detalle";
         }
         return "redirect:/comparativo-precios-compra";
     }
@@ -66,7 +66,7 @@ public class ComparativoPreciosCompraController {
             model.addAttribute("comparativoPreciosCompra", comparativoPreciosCompra.get());
             model.addAttribute("clientes", clienteService.obtenerTodos());
             model.addAttribute("proveedores", proveedorService.obtenerTodos());
-            return "comparativoPreciosCompra/formulario";
+            return "comparativopreciocompra/formulario";
         }
         return "redirect:/comparativo-precios-compra";
     }
@@ -113,6 +113,6 @@ public class ComparativoPreciosCompraController {
         }
         
         model.addAttribute("comparativos", comparativos);
-        return "comparativoPreciosCompra/lista";
+        return "comparativopreciocompra/lista";
     }
 }

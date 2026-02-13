@@ -33,6 +33,7 @@ com/formamosacero/FormamosAceroSacApplication.class
 com/formamosacero/services/ProveedorService.class
 com/formamosacero/models/Cliente.class
 com/formamosacero/models/ComparativoPreciosPasajes.class
+com/formamosacero/controller/HomeController.class
 com/formamosacero/repositories/ClienteRepository.class
 com/formamosacero/controller/ComparativoPreciosPasajesController.class
 com/formamosacero/models/CotizacionPasajes.class

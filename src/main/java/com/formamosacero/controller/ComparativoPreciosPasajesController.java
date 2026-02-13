@@ -27,14 +27,14 @@ public class ComparativoPreciosPasajesController {
     public String listar(Model model) {
         List<ComparativoPreciosPasajes> comparativos = comparativoPreciosPasajesService.obtenerTodos();
         model.addAttribute("comparativos", comparativos);
-        return "comparativoPreciosPasajes/lista";
+        return "comparativopreciopasajes/lista";
     }
 
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("comparativoPreciosPasajes", new ComparativoPreciosPasajes());
         model.addAttribute("clientes", clienteService.obtenerTodos());
-        return "comparativoPreciosPasajes/formulario";
+        return "comparativopreciopasajes/formulario";
     }
 
     @PostMapping
@@ -49,7 +49,7 @@ public class ComparativoPreciosPasajesController {
         Optional<ComparativoPreciosPasajes> comparativoPreciosPasajes = comparativoPreciosPasajesService.obtenerPorId(id);
         if (comparativoPreciosPasajes.isPresent()) {
             model.addAttribute("comparativoPreciosPasajes", comparativoPreciosPasajes.get());
-            return "comparativoPreciosPasajes/detalle";
+            return "comparativopreciopasajes/detalle";
         }
         return "redirect:/comparativo-precios-pasajes";
     }
@@ -60,7 +60,7 @@ public class ComparativoPreciosPasajesController {
         if (comparativoPreciosPasajes.isPresent()) {
             model.addAttribute("comparativoPreciosPasajes", comparativoPreciosPasajes.get());
             model.addAttribute("clientes", clienteService.obtenerTodos());
-            return "comparativoPreciosPasajes/formulario";
+            return "comparativopreciopasajes/formulario";
         }
         return "redirect:/comparativo-precios-pasajes";
     }
@@ -107,6 +107,6 @@ public class ComparativoPreciosPasajesController {
         }
         
         model.addAttribute("comparativos", comparativos);
-        return "comparativoPreciosPasajes/lista";
+        return "comparativopreciopasajes/lista";
     }
 }

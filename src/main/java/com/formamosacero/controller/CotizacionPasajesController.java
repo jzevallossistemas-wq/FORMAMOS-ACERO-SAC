@@ -27,14 +27,14 @@ public class CotizacionPasajesController {
     public String listar(Model model) {
         List<CotizacionPasajes> cotizaciones = cotizacionPasajesService.obtenerTodos();
         model.addAttribute("cotizaciones", cotizaciones);
-        return "cotizacionPasajes/lista";
+        return "cotizacionpasajes/lista";
     }
 
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("cotizacionPasajes", new CotizacionPasajes());
         model.addAttribute("clientes", clienteService.obtenerTodos());
-        return "cotizacionPasajes/formulario";
+        return "cotizacionpasajes/formulario";
     }
 
     @PostMapping
@@ -49,7 +49,7 @@ public class CotizacionPasajesController {
         Optional<CotizacionPasajes> cotizacionPasajes = cotizacionPasajesService.obtenerPorId(id);
         if (cotizacionPasajes.isPresent()) {
             model.addAttribute("cotizacionPasajes", cotizacionPasajes.get());
-            return "cotizacionPasajes/detalle";
+            return "cotizacionpasajes/detalle";
         }
         return "redirect:/cotizacion-pasajes";
     }
@@ -60,7 +60,7 @@ public class CotizacionPasajesController {
         if (cotizacionPasajes.isPresent()) {
             model.addAttribute("cotizacionPasajes", cotizacionPasajes.get());
             model.addAttribute("clientes", clienteService.obtenerTodos());
-            return "cotizacionPasajes/formulario";
+            return "cotizacionpasajes/formulario";
         }
         return "redirect:/cotizacion-pasajes";
     }
@@ -107,6 +107,6 @@ public class CotizacionPasajesController {
         }
         
         model.addAttribute("cotizaciones", cotizaciones);
-        return "cotizacionPasajes/lista";
+        return "cotizacionpasajes/lista";
     }
 }
