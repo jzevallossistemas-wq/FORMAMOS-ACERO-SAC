@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Solicitud de Viáticos</title>
+    <title>Editar Solicitud de Viático</title>
 </head>
 <body>
-    <h1>Editar Solicitud de Viáticos</h1>
+    <h1>Editar Solicitud de Viático</h1>
     <form action="/solicitudviatico/update" method="POST">
-        <!-- Inputs for the viático request form -->
-        <label for="field1">Campo 1:</label>
-        <input type="text" id="field1" name="field1"><br>
-        <label for="field2">Campo 2:</label>
-        <input type="text" id="field2" name="field2"><br>
+        <label for="id">ID Solicitud:</label><br>
+        <input type="text" id="id" name="id" required><br>
+
+        <label for="descripcion">Descripción:</label><br>
+        <input type="text" id="descripcion" name="descripcion" required><br>
+
+        <label for="monto">Monto:</label><br>
+        <input type="number" id="monto" name="monto" required><br>
+
+        <label for="fecha">Fecha:</label><br>
+        <input type="datetime-local" id="fecha" name="fecha" required><br>
+
         <input type="submit" value="Actualizar">
     </form>
 </body>
