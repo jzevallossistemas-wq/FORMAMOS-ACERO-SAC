@@ -9,35 +9,37 @@ import org.springframework.web.bind.annotation.*;
 public class PreOrdenController {
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("preordenes", List.of());
+    public String listarPreOrdenes(Model model) {
+        model.addAttribute("titulo", "Listado de Pre-Órdenes");
         return "preorden/list";
     }
 
     @GetMapping("/nuevo")
-    public String showCreateForm(Model model) {
-        model.addAttribute("preorden", new PreOrden());
+    public String crearPreOrden(Model model) {
+        model.addAttribute("titulo", "Crear Pre-Orden");
         return "preorden/create";
     }
 
-    @PostMapping
-    public String save(@ModelAttribute PreOrden preorden) {
+    @PostMapping("/guardar")
+    public String guardarPreOrden(@RequestParam String numero, Model model) {
+        model.addAttribute("mensaje", "Pre-Orden guardada correctamente");
         return "redirect:/preorden";
     }
 
     @GetMapping("/{id}/editar")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("preorden", new PreOrden());
+    public String editarPreOrden(@PathVariable Long id, Model model) {
+        model.addAttribute("titulo", "Editar Pre-Orden");
+        model.addAttribute("id", id);
         return "preorden/edit";
     }
 
-    @PostMapping("/{id}")
-    public String update(@PathVariable Long id, @ModelAttribute PreOrden preorden) {
+    @PostMapping("/actualizar")
+    public String actualizarPreOrden(@RequestParam Long id, @RequestParam String numero) {
         return "redirect:/preorden";
     }
 
-    @GetMapping("/{id}/eliminar")
-    public String delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public String eliminarPreOrden(@PathVariable Long id) {
         return "redirect:/preorden";
     }
 }
