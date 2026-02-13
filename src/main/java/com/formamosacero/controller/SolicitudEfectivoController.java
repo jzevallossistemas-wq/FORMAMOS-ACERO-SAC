@@ -27,14 +27,14 @@ public class SolicitudEfectivoController {
     public String listar(Model model) {
         List<SolicitudEfectivo> solicitudes = solicitudEfectivoService.obtenerTodos();
         model.addAttribute("solicitudes", solicitudes);
-        return "solicitudEfectivo/lista";
+        return "solicitudefectivo/lista";
     }
 
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("solicitudEfectivo", new SolicitudEfectivo());
         model.addAttribute("clientes", clienteService.obtenerTodos());
-        return "solicitudEfectivo/formulario";
+        return "solicitudefectivo/formulario";
     }
 
     @PostMapping
@@ -49,7 +49,7 @@ public class SolicitudEfectivoController {
         Optional<SolicitudEfectivo> solicitudEfectivo = solicitudEfectivoService.obtenerPorId(id);
         if (solicitudEfectivo.isPresent()) {
             model.addAttribute("solicitudEfectivo", solicitudEfectivo.get());
-            return "solicitudEfectivo/detalle";
+            return "solicitudefectivo/detalle";
         }
         return "redirect:/solicitud-efectivo";
     }
@@ -60,7 +60,7 @@ public class SolicitudEfectivoController {
         if (solicitudEfectivo.isPresent()) {
             model.addAttribute("solicitudEfectivo", solicitudEfectivo.get());
             model.addAttribute("clientes", clienteService.obtenerTodos());
-            return "solicitudEfectivo/formulario";
+            return "solicitudefectivo/formulario";
         }
         return "redirect:/solicitud-efectivo";
     }
@@ -107,6 +107,6 @@ public class SolicitudEfectivoController {
         }
         
         model.addAttribute("solicitudes", solicitudes);
-        return "solicitudEfectivo/lista";
+        return "solicitudefectivo/lista";
     }
 }

@@ -27,14 +27,14 @@ public class SolicitudViaticoController {
     public String listar(Model model) {
         List<SolicitudViatico> solicitudes = solicitudViaticoService.obtenerTodos();
         model.addAttribute("solicitudes", solicitudes);
-        return "solicitudViatico/lista";
+        return "solicitudviatico/lista";
     }
 
     @GetMapping("/new")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("solicitudViatico", new SolicitudViatico());
         model.addAttribute("clientes", clienteService.obtenerTodos());
-        return "solicitudViatico/formulario";
+        return "solicitudviatico/formulario";
     }
 
     @PostMapping
@@ -49,7 +49,7 @@ public class SolicitudViaticoController {
         Optional<SolicitudViatico> solicitudViatico = solicitudViaticoService.obtenerPorId(id);
         if (solicitudViatico.isPresent()) {
             model.addAttribute("solicitudViatico", solicitudViatico.get());
-            return "solicitudViatico/detalle";
+            return "solicitudviatico/detalle";
         }
         return "redirect:/solicitud-viatico";
     }
@@ -60,7 +60,7 @@ public class SolicitudViaticoController {
         if (solicitudViatico.isPresent()) {
             model.addAttribute("solicitudViatico", solicitudViatico.get());
             model.addAttribute("clientes", clienteService.obtenerTodos());
-            return "solicitudViatico/formulario";
+            return "solicitudviatico/formulario";
         }
         return "redirect:/solicitud-viatico";
     }
@@ -107,6 +107,6 @@ public class SolicitudViaticoController {
         }
         
         model.addAttribute("solicitudes", solicitudes);
-        return "solicitudViatico/lista";
+        return "solicitudviatico/lista";
     }
 }
