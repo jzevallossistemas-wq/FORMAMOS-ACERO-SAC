@@ -1,47 +1,40 @@
 package com.example.demo.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.ui.Model;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.example.demo.model.Cliente;
+import com.example.demo.service.ClienteService;
 
-@Controller
-@RequestMapping("/cliente")
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/clientes")
 public class ClienteController {
 
-    @GetMapping("/list")
-    public String listClientes(Model model) {
-        // TODO: Implementar lógica para obtener lista de clientes
-        return "cliente/list";
+    @Autowired
+    private ClienteService clienteService;
+
+    @GetMapping
+    public List<Cliente> listarClientes() {
+        return clienteService.listarClientes();
     }
 
-    @GetMapping("/create")
-    public String createClienteForm(Model model) {
-        return "cliente/create";
+    @PostMapping
+    public ResponseEntity<Cliente> crearCliente(@RequestBody Cliente cliente) {
+        Cliente nuevoCliente = clienteService.crearCliente(cliente);
+        return ResponseEntity.status(201).body(nuevoCliente);
     }
 
-    @PostMapping("/create")
-    public String createCliente(Model model) {
-        // TODO: Implementar lógica para crear cliente
-        return "redirect:/cliente/list";
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> editarCliente(@PathVariable Long id, @RequestBody Cliente clienteDetails) {
+        Cliente actualizadoCliente = clienteService.editarCliente(id, clienteDetails);
+        return ResponseEntity.ok(actualizadoCliente);
     }
 
-    @GetMapping("/edit/{id}")
-    public String editClienteForm(Long id, Model model) {
-        // TODO: Implementar lógica para obtener cliente por ID
-        return "cliente/edit";
-    }
-
-    @PostMapping("/update")
-    public String updateCliente(Model model) {
-        // TODO: Implementar lógica para actualizar cliente
-        return "redirect:/cliente/list";
-    }
-
-    @PostMapping("/delete/{id}")
-    public String deleteCliente(Long id) {
-        // TODO: Implementar lógica para eliminar cliente
-        return "redirect:/cliente/list";
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarCliente(@PathVariable Long id) {
+        clienteService.eliminarCliente(id);
+        return ResponseEntity.noContent().build();
     }
 }
