@@ -12,15 +12,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "solicitud_gasto_viaje", indexes = {
-    @Index(name = "idx_sol_gasto_viaje_numero", columnList = "numero"),
-    @Index(name = "idx_sol_gasto_viaje_fecha", columnList = "fecha"),
-    @Index(name = "idx_sol_gasto_viaje_estado", columnList = "estado")
+@Table(name = "comparativo_precios_pasajes", indexes = {
+    @Index(name = "idx_comp_pasajes_numero", columnList = "numero"),
+    @Index(name = "idx_comp_pasajes_fecha", columnList = "fecha"),
+    @Index(name = "idx_comp_pasajes_estado", columnList = "estado")
 })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolicitudGastoViaje {
+public class ComparativoPreciosPasajes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,41 +41,59 @@ public class SolicitudGastoViaje {
     @Column(name = "solicitante", length = 100)
     private String solicitante;
 
-    @Column(name = "cargo", length = 100)
-    private String cargo;
-
-    @Column(name = "area", length = 100)
-    private String area;
-
-    @Column(name = "motivo", columnDefinition = "TEXT")
-    private String motivo;
-
-    @Column(name = "fecha_inicio")
-    private LocalDate fechaInicio;
-
-    @Column(name = "fecha_fin")
-    private LocalDate fechaFin;
-
     @Column(name = "destino", length = 255)
     private String destino;
 
     @Column(name = "ruta", length = 500)
     private String ruta;
 
-    @Column(name = "combustible", precision = 10, scale = 2)
-    private BigDecimal combustible = BigDecimal.ZERO;
+    @Column(name = "itinerario", columnDefinition = "TEXT")
+    private String itinerario;
 
-    @Column(name = "alimentacion", precision = 10, scale = 2)
-    private BigDecimal alimentacion = BigDecimal.ZERO;
+    @Column(name = "fecha_salida")
+    private LocalDate fechaSalida;
 
-    @Column(name = "hospedaje", precision = 10, scale = 2)
-    private BigDecimal hospedaje = BigDecimal.ZERO;
+    @Column(name = "fecha_retorno")
+    private LocalDate fechaRetorno;
 
-    @Column(name = "otros", precision = 10, scale = 2)
-    private BigDecimal otros = BigDecimal.ZERO;
+    // Aerolínea 1
+    @Column(name = "aerolinea1", length = 100)
+    private String aerolinea1;
 
-    @Column(name = "total_solicitado", precision = 10, scale = 2)
-    private BigDecimal totalSolicitado;
+    @Column(name = "cantidad1")
+    private Integer cantidad1;
+
+    @Column(name = "precio_unitario1", precision = 10, scale = 2)
+    private BigDecimal precioUnitario1;
+
+    @Column(name = "total1", precision = 10, scale = 2)
+    private BigDecimal total1;
+
+    // Aerolínea 2
+    @Column(name = "aerolinea2", length = 100)
+    private String aerolinea2;
+
+    @Column(name = "cantidad2")
+    private Integer cantidad2;
+
+    @Column(name = "precio_unitario2", precision = 10, scale = 2)
+    private BigDecimal precioUnitario2;
+
+    @Column(name = "total2", precision = 10, scale = 2)
+    private BigDecimal total2;
+
+    // Aerolínea 3
+    @Column(name = "aerolinea3", length = 100)
+    private String aerolinea3;
+
+    @Column(name = "cantidad3")
+    private Integer cantidad3;
+
+    @Column(name = "precio_unitario3", precision = 10, scale = 2)
+    private BigDecimal precioUnitario3;
+
+    @Column(name = "total3", precision = 10, scale = 2)
+    private BigDecimal total3;
 
     @Column(name = "moneda", length = 10)
     private String moneda = "PEN";
@@ -102,16 +120,10 @@ public class SolicitudGastoViaje {
     protected void onCreate() {
         fechaCreacion = LocalDateTime.now();
         fechaModificacion = LocalDateTime.now();
-        calculateTotal();
     }
 
     @PreUpdate
     protected void onUpdate() {
         fechaModificacion = LocalDateTime.now();
-        calculateTotal();
-    }
-
-    private void calculateTotal() {
-        totalSolicitado = combustible.add(alimentacion).add(hospedaje).add(otros);
     }
 }

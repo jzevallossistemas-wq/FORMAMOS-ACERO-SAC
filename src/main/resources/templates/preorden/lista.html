@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<head>
+    <title th:text="${pageTitle}">Pre Órdenes</title>
+</head>
+<body>
+<main>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-12">
+                <h2><i class="bi bi-cart"></i> Pre Órdenes</h2>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <a href="/preorden/nueva" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i> Nueva Pre Orden
+                                </a>
+                            </div>
+                            <div>
+                                <form class="d-flex" method="get" action="/preorden">
+                                    <input class="form-control me-2" type="search" name="search" placeholder="Buscar...">
+                                    <button class="btn btn-outline-primary" type="submit">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Número</th>
+                                        <th>Fecha</th>
+                                        <th>Cliente</th>
+                                        <th>Proveedor</th>
+                                        <th>Solicitante</th>
+                                        <th>Monto</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:if="${#lists.isEmpty(preOrdenes)}">
+                                        <td colspan="8" class="text-center text-muted">
+                                            No hay pre órdenes registradas
+                                        </td>
+                                    </tr>
+                                    <tr th:each="preOrden : ${preOrdenes}">
+                                        <td th:text="${preOrden.numero}">PRE-000001</td>
+                                        <td th:text="${#temporals.format(preOrden.fecha, 'dd/MM/yyyy')}">01/01/2024</td>
+                                        <td th:text="${preOrden.cliente != null ? preOrden.cliente.razonSocial : '-'}">Cliente</td>
+                                        <td th:text="${preOrden.proveedor != null ? preOrden.proveedor.razonSocial : '-'}">Proveedor</td>
+                                        <td th:text="${preOrden.solicitante}">Solicitante</td>
+                                        <td>
+                                            <span th:text="${preOrden.moneda}">PEN</span>
+                                            <span th:text="${#numbers.formatDecimal(preOrden.monto, 1, 2)}">0.00</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge" 
+                                                  th:classappend="${preOrden.estado == 'APROBADO' ? 'bg-success' : 
+                                                                   (preOrden.estado == 'RECHAZADO' ? 'bg-danger' : 
+                                                                   (preOrden.estado == 'COMPLETADO' ? 'bg-info' : 'bg-warning'))}"
+                                                  th:text="${preOrden.estado}">PENDIENTE</span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a th:href="@{/preorden/ver/{id}(id=${preOrden.id})}" 
+                                                   class="btn btn-info" title="Ver">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a th:href="@{/preorden/editar/{id}(id=${preOrden.id})}" 
+                                                   class="btn btn-warning" title="Editar">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a th:href="@{/preorden/eliminar/{id}(id=${preOrden.id})}" 
+                                                   class="btn btn-danger" title="Eliminar"
+                                                   onclick="return confirm('¿Está seguro de eliminar esta pre orden?')">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav th:if="${totalPages > 1}">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/preorden(page=${currentPage - 1})}">Anterior</a>
+                                </li>
+                                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                                    th:classappend="${currentPage == i} ? 'active'">
+                                    <a class="page-link" th:href="@{/preorden(page=${i})}" th:text="${i + 1}">1</a>
+                                </li>
+                                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                                    <a class="page-link" th:href="@{/preorden(page=${currentPage + 1})}">Siguiente</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

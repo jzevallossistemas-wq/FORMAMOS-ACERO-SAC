@@ -2,52 +2,74 @@ package com.formamosacero.services;
 
 import com.formamosacero.models.Proveedor;
 import com.formamosacero.repositories.ProveedorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class ProveedorService {
 
-    @Autowired
-    private ProveedorRepository proveedorRepository;
+    private final ProveedorRepository proveedorRepository;
 
-    public List<Proveedor> obtenerTodos() {
+    public List<Proveedor> findAll() {
         return proveedorRepository.findAll();
     }
 
-    public Optional<Proveedor> obtenerPorId(Long id) {
+    public Page<Proveedor> findAll(Pageable pageable) {
+        return proveedorRepository.findAll(pageable);
+    }
+
+    public Optional<Proveedor> findById(Long id) {
         return proveedorRepository.findById(id);
     }
 
-    public Proveedor guardar(Proveedor proveedor) {
+    public Optional<Proveedor> findByRuc(String ruc) {
+        return proveedorRepository.findByRuc(ruc);
+    }
+
+    public List<Proveedor> findByRazonSocial(String razonSocial) {
+        return proveedorRepository.findByRazonSocialContainingIgnoreCase(razonSocial);
+    }
+
+    public List<Proveedor> findByEstado(String estado) {
+        return proveedorRepository.findByEstado(estado);
+    }
+
+    public Proveedor save(Proveedor proveedor) {
         return proveedorRepository.save(proveedor);
     }
 
-    public Proveedor actualizar(Long id, Proveedor proveedorDetails) {
-        Optional<Proveedor> proveedor = proveedorRepository.findById(id);
-        if (proveedor.isPresent()) {
-            Proveedor p = proveedor.get();
-            p.setNombre(proveedorDetails.getNombre());
-            p.setDireccion(proveedorDetails.getDireccion());
-            p.setTelefono(proveedorDetails.getTelefono());
-            p.setEmail(proveedorDetails.getEmail());
-            return proveedorRepository.save(p);
-        }
-        return null;
+    public Proveedor update(Long id, Proveedor proveedorDetails) {
+        return proveedorRepository.findById(id)
+                .map(proveedor -> {
+                    proveedor.setRuc(proveedorDetails.getRuc());
+                    proveedor.setRazonSocial(proveedorDetails.getRazonSocial());
+                    proveedor.setContacto(proveedorDetails.getContacto());
+                    proveedor.setEmail(proveedorDetails.getEmail());
+                    proveedor.setTelefono(proveedorDetails.getTelefono());
+                    proveedor.setDireccion(proveedorDetails.getDireccion());
+                    proveedor.setCiudad(proveedorDetails.getCiudad());
+                    proveedor.setPais(proveedorDetails.getPais());
+                    proveedor.setTipoProveedor(proveedorDetails.getTipoProveedor());
+                    proveedor.setCategoria(proveedorDetails.getCategoria());
+                    proveedor.setEstado(proveedorDetails.getEstado());
+                    return proveedorRepository.save(proveedor);
+                })
+                .orElse(null);
     }
 
-    public void eliminar(Long id) {
+    public void deleteById(Long id) {
         proveedorRepository.deleteById(id);
     }
 
-    public Proveedor buscarPorEmail(String email) {
-        return proveedorRepository.findByEmail(email);
-    }
-
-    public Proveedor buscarPorNombre(String nombre) {
-        return proveedorRepository.findByNombre(nombre);
+    public boolean existsByRuc(String ruc) {
+        return proveedorRepository.findByRuc(ruc).isPresent();
     }
 }

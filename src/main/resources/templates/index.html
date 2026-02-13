@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Dashboard - FORMAMOS ACERO SAC</title>
+</head>
+<body>
+<main>
+    <div class="container-fluid">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="display-4">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </h1>
+                <p class="lead">Sistema de Gestión FORMAMOS ACERO SAC</p>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Pre Órdenes</h6>
+                                <h2 class="card-title mb-0">0</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="bi bi-cart"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-primary bg-opacity-75">
+                        <a href="/preorden" class="text-white text-decoration-none">
+                            Ver todas <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Órdenes</h6>
+                                <h2 class="card-title mb-0">0</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="bi bi-cart-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-success bg-opacity-75">
+                        <a href="/orden" class="text-white text-decoration-none">
+                            Ver todas <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Sol. Efectivo</h6>
+                                <h2 class="card-title mb-0">0</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="bi bi-cash"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-info bg-opacity-75">
+                        <a href="/solicitudefectivo" class="text-white text-decoration-none">
+                            Ver todas <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-warning text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-subtitle mb-2 text-white-50">Sol. Viáticos</h6>
+                                <h2 class="card-title mb-0">0</h2>
+                            </div>
+                            <div class="fs-1">
+                                <i class="bi bi-airplane"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-warning bg-opacity-75">
+                        <a href="/solicitudviatico" class="text-white text-decoration-none">
+                            Ver todas <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-lightning"></i> Accesos Rápidos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <a href="/preorden/nueva" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-plus-circle"></i><br>Nueva Pre Orden
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/orden/nueva" class="btn btn-outline-success w-100">
+                                    <i class="bi bi-plus-circle"></i><br>Nueva Orden
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/solicitudefectivo/nueva" class="btn btn-outline-info w-100">
+                                    <i class="bi bi-plus-circle"></i><br>Nueva Sol. Efectivo
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a href="/solicitudviatico/nueva" class="btn btn-outline-warning w-100">
+                                    <i class="bi bi-plus-circle"></i><br>Nueva Sol. Viático
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Actividad Reciente</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">No hay actividad reciente para mostrar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>
