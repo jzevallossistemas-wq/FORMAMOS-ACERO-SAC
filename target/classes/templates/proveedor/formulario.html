@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${esNuevo ? 'Nuevo Proveedor' : 'Editar Proveedor'}">Formulario Proveedor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #ff8c00;
+            --primary-purple: #667eea;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏢 Formamos Acero SAC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/cliente">👥 Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/proveedor">🏭 Proveedores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/preorden">📋 Pre Órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/orden">📝 Órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/solicitudefectivo">💵 Sol. Efectivo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/solicitudviatico">✈️ Sol. Viático</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cotizacionpasajes">🎫 Cotiz. Pasajes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/comparativopreciopasajes">📊 Comp. Pasajes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/comparativopreciocompra">📈 Comp. Compra</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2 th:text="${esNuevo ? '🏭 Nuevo Proveedor' : '✏️ Editar Proveedor'}"></h2>
+        </div>
+
+        <!-- Form -->
+        <div class="card">
+            <div class="card-body">
+                <form th:action="${esNuevo ? '/proveedor' : '/proveedor/' + proveedor.id}" method="post" th:object="${proveedor}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre / Razón Social *</label>
+                            <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" id="telefono" th:field="*{telefono}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" th:field="*{direccion}">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success">💾 Guardar</button>
+                        <a href="/proveedor" class="btn btn-secondary">❌ Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

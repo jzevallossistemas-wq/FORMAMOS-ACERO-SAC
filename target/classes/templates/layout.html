@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo != null ? titulo : 'Formamos Acero SAC'}">Formamos Acero SAC</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-orange: #ff8c00;
+            --primary-purple: #667eea;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.85) !important;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-orange);
+            border-color: var(--primary-orange);
+        }
+        
+        .btn-primary:hover {
+            background-color: #e67e00;
+            border-color: #e67e00;
+        }
+        
+        .table thead {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+            transition: all 0.2s;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏢 Formamos Acero SAC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cliente">👥 Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/proveedor">🏭 Proveedores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/preorden">📋 Pre Órdenes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/orden">📝 Órdenes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/solicitudefectivo">💵 Sol. Efectivo</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/solicitudviatico">✈️ Sol. Viático</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cotizacionpasajes">🎫 Cotiz. Pasajes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/comparativopreciopasajes">📊 Comp. Pasajes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/comparativopreciocompra">📈 Comp. Compra</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Flash Messages -->
+        <div th:if="${mensaje}" th:class="${'alert alert-' + (tipoMensaje == 'success' ? 'success' : 'danger')}" role="alert">
+            <span th:text="${mensaje}"></span>
+        </div>
+        
+        <!-- Content Block -->
+        <div th:replace="${contenido}"></div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

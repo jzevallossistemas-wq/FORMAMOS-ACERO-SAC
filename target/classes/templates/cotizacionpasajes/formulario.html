@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${esNuevo ? 'Nueva Cotización de Pasajes' : 'Editar Cotización de Pasajes'}">Formulario Cotización Pasajes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { --primary-orange: #ff8c00; --primary-purple: #667eea; }
+        .navbar { background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%); }
+        .navbar-brand, .nav-link { color: white !important; }
+        .page-header { background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏢 Formamos Acero SAC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/cliente">👥 Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/proveedor">🏭 Proveedores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/preorden">📋 Pre Órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/orden">📝 Órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/solicitudefectivo">💵 Sol. Efectivo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/solicitudviatico">✈️ Sol. Viático</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/cotizacionpasajes">🎫 Cotiz. Pasajes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/comparativopreciopasajes">📊 Comp. Pasajes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/comparativopreciocompra">📈 Comp. Compra</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="page-header"><h2 th:text="${esNuevo ? '➕ Nueva Cotización de Pasajes' : '✏️ Editar Cotización de Pasajes'}"></h2></div>
+
+        <div class="card">
+            <div class="card-body">
+                <form th:action="${esNuevo ? '/cotizacionpasajes' : '/cotizacionpasajes/' + cotizacionPasajes.id}" method="post" th:object="${cotizacionPasajes}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="numero" class="form-label">Número *</label>
+                            <input type="text" class="form-control" id="numero" th:field="*{numero}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="destino" class="form-label">Destino *</label>
+                            <input type="text" class="form-control" id="destino" th:field="*{destino}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="ruta" class="form-label">Ruta *</label>
+                            <input type="text" class="form-control" id="ruta" th:field="*{ruta}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="fechaViaje" class="form-label">Fecha Viaje *</label>
+                            <input type="date" class="form-control" id="fechaViaje" th:field="*{fechaViaje}" required>
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Opción 1</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="aerolinea1" class="form-label">Aerolínea 1 *</label>
+                            <input type="text" class="form-control" id="aerolinea1" th:field="*{aerolinea1}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="precio1" class="form-label">Precio 1 *</label>
+                            <input type="number" step="0.01" class="form-control" id="precio1" th:field="*{precio1}" required>
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Opción 2</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="aerolinea2" class="form-label">Aerolínea 2</label>
+                            <input type="text" class="form-control" id="aerolinea2" th:field="*{aerolinea2}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="precio2" class="form-label">Precio 2</label>
+                            <input type="number" step="0.01" class="form-control" id="precio2" th:field="*{precio2}">
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Opción 3</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="aerolinea3" class="form-label">Aerolínea 3</label>
+                            <input type="text" class="form-control" id="aerolinea3" th:field="*{aerolinea3}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="precio3" class="form-label">Precio 3</label>
+                            <input type="number" step="0.01" class="form-control" id="precio3" th:field="*{precio3}">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="mejorOpcion" class="form-label">Mejor Opción *</label>
+                        <select class="form-control" id="mejorOpcion" th:field="*{mejorOpcion}" required>
+                            <option value="">Seleccione la mejor opción</option>
+                            <option value="Opción 1">Opción 1</option>
+                            <option value="Opción 2">Opción 2</option>
+                            <option value="Opción 3">Opción 3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success">💾 Guardar</button>
+                        <a href="/cotizacionpasajes" class="btn btn-secondary">❌ Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

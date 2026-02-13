@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: formamos-acero-sac
+  datasource:
+    url: jdbc:mysql://localhost:3306/formamos_acero
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8080

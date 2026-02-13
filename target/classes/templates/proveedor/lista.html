@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Proveedores - Formamos Acero SAC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #ff8c00;
+            --primary-purple: #667eea;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%);
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .table thead {
+            background-color: var(--primary-purple);
+            color: white;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, var(--primary-orange) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">🏢 Formamos Acero SAC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/cliente">👥 Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/proveedor">🏭 Proveedores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/preorden">📋 Pre Órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/orden">📝 Órdenes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/solicitudefectivo">💵 Sol. Efectivo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/solicitudviatico">✈️ Sol. Viático</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cotizacionpasajes">🎫 Cotiz. Pasajes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/comparativopreciopasajes">📊 Comp. Pasajes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/comparativopreciocompra">📈 Comp. Compra</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Flash Messages -->
+        <div th:if="${mensaje}" th:class="${'alert alert-' + (tipoMensaje == 'success' ? 'success' : 'danger')}" role="alert">
+            <span th:text="${mensaje}"></span>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <h2>🏭 Listado de Proveedores</h2>
+        </div>
+
+        <!-- Search and Actions -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{/proveedor}" method="get" class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="buscar" placeholder="Buscar por nombre, email, teléfono..." th:value="${buscar}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">🔍 Buscar</button>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/proveedor/nuevo" class="btn btn-success w-100">➕ Crear Nuevo</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:if="${#lists.isEmpty(items)}">
+                                <td colspan="6" class="text-center">No hay proveedores registrados</td>
+                            </tr>
+                            <tr th:each="item : ${items}">
+                                <td th:text="${item.id}"></td>
+                                <td th:text="${item.nombre}"></td>
+                                <td th:text="${item.email}"></td>
+                                <td th:text="${item.telefono}"></td>
+                                <td th:text="${item.direccion}"></td>
+                                <td>
+                                    <a th:href="@{/proveedor/{id}/editar(id=${item.id})}" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                    <a th:href="@{/proveedor/{id}/eliminar(id=${item.id})}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar este proveedor?')">🗑️ Eliminar</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav th:if="${totalPages > 1}">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link" th:href="@{/proveedor(page=${currentPage - 1}, buscar=${buscar})}">Anterior</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" 
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link" th:href="@{/proveedor(page=${i}, buscar=${buscar})}" th:text="${i + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                            <a class="page-link" th:href="@{/proveedor(page=${currentPage + 1}, buscar=${buscar})}">Siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
