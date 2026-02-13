@@ -6,7 +6,8 @@ Sistema de gestión empresarial desarrollado con Spring Boot para FORMAMOS ACERO
 
 - **Framework**: Spring Boot 2.7.0
 - **Java**: 11
-- **Base de Datos**: MySQL 8.0
+- **Base de Datos**: MySQL 8.0+
+- **MySQL Connector**: mysql-connector-j 8.2.0 (secure version)
 - **ORM**: JPA/Hibernate
 - **Mapper**: ModelMapper
 - **Validación**: javax.validation
