@@ -1,65 +1,37 @@
 package com.formamosacero.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import java.util.List;
 
-import com.formamosacero.model.Cliente;
-import com.formamosacero.service.ClienteService;
-
-@Controller
-@RequestMapping("/cliente")
+@RestController
+@RequestMapping("/clientes")
 public class ClienteController {
 
-    @Autowired
-    private ClienteService clienteService;
-
-    // Endpoint to list clientes with pagination
+    // GET mapping for listing clients
     @GetMapping
-    public ModelAndView listClientes(@RequestParam(defaultValue = "0") int page) {
-        Page<Cliente> clientes = clienteService.findAll(PageRequest.of(page, 10));
-        ModelAndView mav = new ModelAndView("cliente/list");
-        mav.addObject("clientes", clientes);
-        return mav;
+    public List<Cliente> listarClientes() {
+        // Logic for listing clients goes here
+        return null;
     }
 
-    // Endpoint to show create form
-    @GetMapping("/nuevo")
-    public String showCreateForm(Model model) {
-        model.addAttribute("cliente", new Cliente());
-        return "cliente/create";
-    }
-
-    // Endpoint to save new cliente
+    // POST mapping for creating a client
     @PostMapping
-    public String saveCliente(@ModelAttribute Cliente cliente) {
-        clienteService.save(cliente);
-        return "redirect:/cliente";
+    public Cliente crearCliente(@RequestBody Cliente cliente) {
+        // Logic for creating a client goes here
+        return null;
     }
 
-    // Endpoint to show edit form
-    @GetMapping("/{id}/editar")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        Cliente cliente = clienteService.findById(id);
-        model.addAttribute("cliente", cliente);
-        return "cliente/edit";
+    // GET mapping for editing a client
+    @GetMapping("/{id}")
+    public Cliente editarCliente(@PathVariable Long id) {
+        // Logic for retrieving a client for editing goes here
+        return null;
     }
 
-    // Endpoint to update cliente
+    // POST mapping for updating a client
     @PostMapping("/{id}")
-    public String updateCliente(@PathVariable Long id, @ModelAttribute Cliente cliente) {
-        cliente.setId(id);
-        clienteService.update(cliente);
-        return "redirect:/cliente";
-    }
-
-    // Endpoint to delete cliente
-    @GetMapping("/{id}/eliminar")
-    public String deleteCliente(@PathVariable Long id) {
-        clienteService.delete(id);
-        return "redirect:/cliente";
+    public Cliente actualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
+        // Logic for updating a client goes here
+        return null;
     }
 }
