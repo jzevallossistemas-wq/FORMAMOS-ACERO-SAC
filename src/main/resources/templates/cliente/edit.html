@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Cliente</title>
+</head>
+<body>
+    <h1>Edit Cliente</h1>
+    <form action="/cliente" method="POST">
+        <input type="hidden" name="id" value="">
+        
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+
+        <label for="tipoDocumento">Tipo de Documento:</label><br>
+        <input type="text" id="tipoDocumento" name="tipoDocumento" required><br><br>
+
+        <label for="numeroDocumento">Número de Documento:</label><br>
+        <input type="text" id="numeroDocumento" name="numeroDocumento" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="telefono">Teléfono:</label><br>
+        <input type="tel" id="telefono" name="telefono"><br><br>
+
+        <label for="celular">Celular:</label><br>
+        <input type="tel" id="celular" name="celular"><br><br>
+
+        <label for="direccion">Dirección:</label><br>
+        <input type="text" id="direccion" name="direccion"><br><br>
+
+        <label for="ciudad">Ciudad:</label><br>
+        <input type="text" id="ciudad" name="ciudad"><br><br>
+
+        <label for="provincia">Provincia:</label><br>
+        <input type="text" id="provincia" name="provincia"><br><br>
+
+        <label for="pais">País:</label><br>
+        <input type="text" id="pais" name="pais"><br><br>
+
+        <label for="estado">Estado:</label><br>
+        <input type="text" id="estado" name="estado"><br><br>
+
+        <label for="notas">Notas:</label><br>
+        <textarea id="notas" name="notas"></textarea><br><br>
+
+        <input type="submit" value="Update">
+        <a href="/cliente">Back to List</a>
+    </form>
+</body>
+</html>
