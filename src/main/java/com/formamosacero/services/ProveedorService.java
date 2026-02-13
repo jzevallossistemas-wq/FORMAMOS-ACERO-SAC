@@ -30,10 +30,17 @@ public class ProveedorService {
         Optional<Proveedor> proveedor = proveedorRepository.findById(id);
         if (proveedor.isPresent()) {
             Proveedor p = proveedor.get();
-            p.setNombre(proveedorDetails.getNombre());
-            p.setDireccion(proveedorDetails.getDireccion());
-            p.setTelefono(proveedorDetails.getTelefono());
+            p.setRuc(proveedorDetails.getRuc());
+            p.setRazonSocial(proveedorDetails.getRazonSocial());
+            p.setContacto(proveedorDetails.getContacto());
             p.setEmail(proveedorDetails.getEmail());
+            p.setTelefono(proveedorDetails.getTelefono());
+            p.setDireccion(proveedorDetails.getDireccion());
+            p.setCiudad(proveedorDetails.getCiudad());
+            p.setPais(proveedorDetails.getPais());
+            p.setTipoProveedor(proveedorDetails.getTipoProveedor());
+            p.setCategoria(proveedorDetails.getCategoria());
+            p.setEstado(proveedorDetails.getEstado());
             return proveedorRepository.save(p);
         }
         return null;
@@ -47,7 +54,11 @@ public class ProveedorService {
         return proveedorRepository.findByEmail(email);
     }
 
-    public Proveedor buscarPorNombre(String nombre) {
-        return proveedorRepository.findByNombre(nombre);
+    public Proveedor buscarPorRuc(String ruc) {
+        return proveedorRepository.findByRuc(ruc);
+    }
+
+    public Proveedor buscarPorRazonSocial(String razonSocial) {
+        return proveedorRepository.findByRazonSocial(razonSocial);
     }
 }
