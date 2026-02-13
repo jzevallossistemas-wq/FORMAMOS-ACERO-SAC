@@ -1,52 +1,45 @@
 package com.formamosacero.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/ordenes")
+@Controller
+@RequestMapping("/orden")
 public class OrdenController {
 
-    @Autowired
-    private OrdenService ordenService;
-
     @GetMapping
-    public List<Orden> getAllOrdenes() {
-        return ordenService.getAllOrdenes();
+    public String listarOrdenes(Model model) {
+        model.addAttribute("titulo", "Listado de Órdenes");
+        return "orden/list";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Orden> getOrdenById(@PathVariable Long id) {
-        Orden orden = ordenService.getOrdenById(id);
-        if (orden != null) {
-            return ResponseEntity.ok(orden);
-        }
-        return ResponseEntity.notFound().build();
+    @GetMapping("/nuevo")
+    public String crearOrden(Model model) {
+        model.addAttribute("titulo", "Crear Orden");
+        return "orden/create";
     }
 
-    @PostMapping
-    public ResponseEntity<Orden> createOrden(@RequestBody Orden orden) {
-        Orden createdOrden = ordenService.createOrden(orden);
-        return ResponseEntity.status(201).body(createdOrden);
+    @PostMapping("/guardar")
+    public String guardarOrden(@RequestParam String numero, Model model) {
+        model.addAttribute("mensaje", "Orden guardada correctamente");
+        return "redirect:/orden";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Orden> updateOrden(@PathVariable Long id, @RequestBody Orden ordenDetails) {
-        Orden updatedOrden = ordenService.updateOrden(id, ordenDetails);
-        if (updatedOrden != null) {
-            return ResponseEntity.ok(updatedOrden);
-        }
-        return ResponseEntity.notFound().build();
+    @GetMapping("/{id}/editar")
+    public String editarOrden(@PathVariable Long id, Model model) {
+        model.addAttribute("titulo", "Editar Orden");
+        model.addAttribute("id", id);
+        return "orden/edit";
+    }
+
+    @PostMapping("/actualizar")
+    public String actualizarOrden(@RequestParam Long id, @RequestParam String numero) {
+        return "redirect:/orden";
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrden(@PathVariable Long id) {
-        if (ordenService.deleteOrden(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public String eliminarOrden(@PathVariable Long id) {
+        return "redirect:/orden";
     }
 }
