@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Cotizaciones de Pasajes - FORMAMOS ACERO SAC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/"><i class="bi bi-building"></i> FORMAMOS ACERO SAC</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i> <span th:text="${mensaje}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-ticket-perforated"></i> Lista de Cotizaciones de Pasajes</h2>
+            <a href="/cotizacionpasajes/new" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Nueva Cotización
+            </a>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-search"></i> Filtros de Búsqueda</h5>
+                <form action="/cotizacionpasajes/search" method="get" class="row g-3">
+                    <div class="col-md-2">
+                        <label class="form-label">Número</label>
+                        <input type="text" name="numero" class="form-control" placeholder="Número">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Fecha Desde</label>
+                        <input type="date" name="fechaDesde" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Fecha Hasta</label>
+                        <input type="date" name="fechaHasta" class="form-control">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Destino</label>
+                        <input type="text" name="destino" class="form-control" placeholder="Destino">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Estado</label>
+                        <select name="estado" class="form-select">
+                            <option value="">Todos</option>
+                            <option value="PENDIENTE">Pendiente</option>
+                            <option value="APROBADO">Aprobado</option>
+                            <option value="RECHAZADO">Rechazado</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                        <a href="/cotizacionpasajes" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Limpiar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Número</th>
+                                <th>Fecha</th>
+                                <th>Cliente</th>
+                                <th>Solicitante</th>
+                                <th>Destino</th>
+                                <th>Fecha Inicio</th>
+                                <th>Fecha Fin</th>
+                                <th>Mejor Opción</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cotizacion : ${cotizaciones}">
+                                <td th:text="${cotizacion.id}"></td>
+                                <td th:text="${cotizacion.numero}"></td>
+                                <td th:text="${#temporals.format(cotizacion.fecha, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${cotizacion.cliente?.razonSocial}"></td>
+                                <td th:text="${cotizacion.solicitante}"></td>
+                                <td th:text="${cotizacion.destino}"></td>
+                                <td th:text="${#temporals.format(cotizacion.fechaInicio, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${#temporals.format(cotizacion.fechaFin, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${cotizacion.mejorOpcion}"></td>
+                                <td>
+                                    <span th:class="${cotizacion.estado == 'APROBADO' ? 'badge bg-success' : (cotizacion.estado == 'PENDIENTE' ? 'badge bg-warning' : 'badge bg-danger')}" 
+                                          th:text="${cotizacion.estado}"></span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a th:href="@{/cotizacionpasajes/{id}(id=${cotizacion.id})}" class="btn btn-sm btn-info" title="Ver">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:href="@{/cotizacionpasajes/{id}/edit(id=${cotizacion.id})}" class="btn btn-sm btn-warning" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-danger" 
+                                                th:onclick="'eliminarCotizacion(' + ${cotizacion.id} + ')'" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(cotizaciones)}">
+                                <td colspan="11" class="text-center">No hay cotizaciones de pasajes registradas</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function eliminarCotizacion(id) {
+            if (confirm('¿Está seguro de eliminar esta cotización de pasajes?')) {
+                fetch('/cotizacionpasajes/' + id, {
+                    method: 'DELETE'
+                })
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'success') {
+                        alert('Cotización eliminada exitosamente');
+                        location.reload();
+                    } else {
+                        alert('Error al eliminar la cotización');
+                    }
+                })
+                .catch(error => {
+                    alert('Error al eliminar la cotización');
+                    console.error('Error:', error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

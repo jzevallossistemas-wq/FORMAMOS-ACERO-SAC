@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo}">FORMAMOS ACERO SAC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        .navbar-brand {
+            font-weight: bold;
+        }
+        .sidebar {
+            min-height: 100vh;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+        .sidebar .nav-link {
+            color: #333;
+            padding: .75rem 1rem;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #f8f9fa;
+        }
+        .sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        main {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-building"></i> FORMAMOS ACERO SAC
+            </a>
+            <span class="navbar-text text-white">
+                Sistema de Gestión
+            </span>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-md-block bg-light sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cliente">
+                                <i class="bi bi-people"></i> Clientes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/proveedor">
+                                <i class="bi bi-truck"></i> Proveedores
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/preorden">
+                                <i class="bi bi-file-earmark-text"></i> Pre Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/orden">
+                                <i class="bi bi-file-earmark-check"></i> Órdenes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/solicitud-efectivo">
+                                <i class="bi bi-cash"></i> Solicitudes Efectivo
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/solicitud-viatico">
+                                <i class="bi bi-airplane"></i> Solicitudes Viático
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cotizacion-pasajes">
+                                <i class="bi bi-ticket"></i> Cotización Pasajes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/comparativo-precios-pasajes">
+                                <i class="bi bi-bar-chart"></i> Comparativo Pasajes
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/comparativo-precios-compra">
+                                <i class="bi bi-clipboard-data"></i> Comparativo Compras
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-10 ms-sm-auto px-md-4">
+                <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                    <i class="bi bi-check-circle"></i> <span th:text="${mensaje}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i> <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                
+                <div th:replace="~{::content}">
+                    <!-- Page content goes here -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:replace="~{::scripts}">
+        <!-- Additional scripts go here -->
+    </script>
+</body>
+</html>
