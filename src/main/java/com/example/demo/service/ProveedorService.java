@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Proveedor;
+import com.example.demo.entity.Proveedor;
 import com.example.demo.repository.ProveedorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

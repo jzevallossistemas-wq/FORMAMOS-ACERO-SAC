@@ -31,11 +31,14 @@ public class ComparativoPrecioPasajesService {
         Optional<ComparativoPrecioPasajes> comparativoPrecioPasajes = comparativoPrecioPasajesRepository.findById(id);
         if (comparativoPrecioPasajes.isPresent()) {
             ComparativoPrecioPasajes existing = comparativoPrecioPasajes.get();
-            if (comparativoPrecioPasajesDetails.getOrigen() != null) {
-                existing.setOrigen(comparativoPrecioPasajesDetails.getOrigen());
+            if (comparativoPrecioPasajesDetails.getNumero() != null) {
+                existing.setNumero(comparativoPrecioPasajesDetails.getNumero());
             }
-            if (comparativoPrecioPasajesDetails.getDestino() != null) {
-                existing.setDestino(comparativoPrecioPasajesDetails.getDestino());
+            if (comparativoPrecioPasajesDetails.getDescripcion() != null) {
+                existing.setDescripcion(comparativoPrecioPasajesDetails.getDescripcion());
+            }
+            if (comparativoPrecioPasajesDetails.getEstado() != null) {
+                existing.setEstado(comparativoPrecioPasajesDetails.getEstado());
             }
             return comparativoPrecioPasajesRepository.save(existing);
         }

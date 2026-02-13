@@ -31,14 +31,14 @@ public class ComparativoPrecioCompraService {
         Optional<ComparativoPrecioCompra> comparativoPrecioCompra = comparativoPrecioCompraRepository.findById(id);
         if (comparativoPrecioCompra.isPresent()) {
             ComparativoPrecioCompra existing = comparativoPrecioCompra.get();
-            if (comparativoPrecioCompraDetails.getNombre() != null) {
-                existing.setNombre(comparativoPrecioCompraDetails.getNombre());
+            if (comparativoPrecioCompraDetails.getNumero() != null) {
+                existing.setNumero(comparativoPrecioCompraDetails.getNumero());
             }
-            if (comparativoPrecioCompraDetails.getPrecio() != null) {
-                existing.setPrecio(comparativoPrecioCompraDetails.getPrecio());
+            if (comparativoPrecioCompraDetails.getDescripcion() != null) {
+                existing.setDescripcion(comparativoPrecioCompraDetails.getDescripcion());
             }
-            if (comparativoPrecioCompraDetails.getProveedor() != null) {
-                existing.setProveedor(comparativoPrecioCompraDetails.getProveedor());
+            if (comparativoPrecioCompraDetails.getEstado() != null) {
+                existing.setEstado(comparativoPrecioCompraDetails.getEstado());
             }
             return comparativoPrecioCompraRepository.save(existing);
         }
