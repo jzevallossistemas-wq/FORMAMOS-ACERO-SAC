@@ -1,48 +1,73 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.SolicitudViatico;
+import com.example.demo.dto.SolicitudViaticoDTO;
+import com.example.demo.entity.SolicitudViatico;
 import com.example.demo.service.SolicitudViaticoService;
+import com.example.demo.util.MapperUtil;
+import com.example.demo.response.ApiResponse;
+import com.example.demo.constant.ApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/solicitud-viatico")
+@RequestMapping(ApiConstants.API_BASE_PATH + "/solicitudes-viatico")
 public class SolicitudViaticoController {
 
     @Autowired
     private SolicitudViaticoService solicitudViaticoService;
 
+    @Autowired
+    private MapperUtil mapperUtil;
+
     @PostMapping
-    public ResponseEntity<SolicitudViatico> createSolicitudViatico(@RequestBody SolicitudViatico solicitudViatico) {
-        SolicitudViatico created = solicitudViaticoService.createSolicitudViatico(solicitudViatico);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<SolicitudViaticoDTO>> createSolicitudViatico(
+            @Valid @RequestBody SolicitudViaticoDTO solicitudDTO) {
+        SolicitudViatico solicitud = mapperUtil.map(solicitudDTO, SolicitudViatico.class);
+        SolicitudViatico created = solicitudViaticoService.createSolicitudViatico(solicitud);
+        SolicitudViaticoDTO dto = mapperUtil.map(created, SolicitudViaticoDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(ApiConstants.CREATE_SUCCESS, dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SolicitudViatico> getSolicitudViatico(@PathVariable Long id) {
-        SolicitudViatico solicitudViatico = solicitudViaticoService.getSolicitudViaticoById(id);
-        return new ResponseEntity<>(solicitudViatico, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<SolicitudViaticoDTO>> getSolicitudViatico(@PathVariable Long id) {
+        SolicitudViatico solicitud = solicitudViaticoService.getSolicitudViaticoById(id);
+        if (solicitud == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Solicitud no encontrada"));
+        }
+        SolicitudViaticoDTO dto = mapperUtil.map(solicitud, SolicitudViaticoDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Solicitud encontrada", dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<SolicitudViatico>> getAllSolicitudViaticos() {
-        List<SolicitudViatico> solicitudViaticos = solicitudViaticoService.getAllSolicitudViaticos();
-        return new ResponseEntity<>(solicitudViaticos, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<List<SolicitudViaticoDTO>>> getAllSolicitudViaticos() {
+        List<SolicitudViatico> solicitudes = solicitudViaticoService.getAllSolicitudViaticos();
+        List<SolicitudViaticoDTO> dtos = mapperUtil.mapList(solicitudes, SolicitudViaticoDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Solicitudes obtenidas exitosamente", dtos));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SolicitudViatico> updateSolicitudViatico(@PathVariable Long id, @RequestBody SolicitudViatico solicitudViatico) {
-        SolicitudViatico updated = solicitudViaticoService.updateSolicitudViatico(id, solicitudViatico);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<SolicitudViaticoDTO>> updateSolicitudViatico(
+            @PathVariable Long id, @Valid @RequestBody SolicitudViaticoDTO solicitudDTO) {
+        SolicitudViatico solicitud = mapperUtil.map(solicitudDTO, SolicitudViatico.class);
+        SolicitudViatico updated = solicitudViaticoService.updateSolicitudViatico(id, solicitud);
+        if (updated == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Solicitud no encontrada"));
+        }
+        SolicitudViaticoDTO dto = mapperUtil.map(updated, SolicitudViaticoDTO.class);
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.UPDATE_SUCCESS, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSolicitudViatico(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteSolicitudViatico(@PathVariable Long id) {
         solicitudViaticoService.deleteSolicitudViatico(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.DELETE_SUCCESS, null));
     }
 }

@@ -1,45 +1,72 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.PreordenDTO;
+import com.example.demo.entity.Preorden;
+import com.example.demo.service.PreordenService;
+import com.example.demo.util.MapperUtil;
+import com.example.demo.response.ApiResponse;
+import com.example.demo.constant.ApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/preorden")
+@RequestMapping(ApiConstants.API_BASE_PATH + "/preordenes")
 public class PreordenController {
 
     @Autowired
     private PreordenService preordenService;
 
+    @Autowired
+    private MapperUtil mapperUtil;
+
     @PostMapping
-    public ResponseEntity<Preorden> createPreorden(@RequestBody Preorden preorden) {
+    public ResponseEntity<ApiResponse<PreordenDTO>> createPreorden(@Valid @RequestBody PreordenDTO preordenDTO) {
+        Preorden preorden = mapperUtil.map(preordenDTO, Preorden.class);
         Preorden createdPreorden = preordenService.createPreorden(preorden);
-        return ResponseEntity.ok(createdPreorden);
+        PreordenDTO dto = mapperUtil.map(createdPreorden, PreordenDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(ApiConstants.CREATE_SUCCESS, dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Preorden> getPreordenById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<PreordenDTO>> getPreordenById(@PathVariable Long id) {
         Preorden preorden = preordenService.getPreordenById(id);
-        return ResponseEntity.ok(preorden);
+        if (preorden == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Preorden no encontrada"));
+        }
+        PreordenDTO dto = mapperUtil.map(preorden, PreordenDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Preorden encontrada", dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<Preorden>> getAllPreordenes() {
+    public ResponseEntity<ApiResponse<List<PreordenDTO>>> getAllPreordenes() {
         List<Preorden> preordenes = preordenService.getAllPreordenes();
-        return ResponseEntity.ok(preordenes);
+        List<PreordenDTO> dtos = mapperUtil.mapList(preordenes, PreordenDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Preórdenes obtenidas exitosamente", dtos));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Preorden> updatePreorden(@PathVariable Long id, @RequestBody Preorden preorden) {
+    public ResponseEntity<ApiResponse<PreordenDTO>> updatePreorden(
+            @PathVariable Long id, @Valid @RequestBody PreordenDTO preordenDTO) {
+        Preorden preorden = mapperUtil.map(preordenDTO, Preorden.class);
         Preorden updatedPreorden = preordenService.updatePreorden(id, preorden);
-        return ResponseEntity.ok(updatedPreorden);
+        if (updatedPreorden == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Preorden no encontrada"));
+        }
+        PreordenDTO dto = mapperUtil.map(updatedPreorden, PreordenDTO.class);
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.UPDATE_SUCCESS, dto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePreorden(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deletePreorden(@PathVariable Long id) {
         preordenService.deletePreorden(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.DELETE_SUCCESS, null));
     }
 }

@@ -1,58 +1,77 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.SolicitudEfectivoDTO;
 import com.example.demo.entity.SolicitudEfectivo;
 import com.example.demo.service.SolicitudEfectivoService;
+import com.example.demo.util.MapperUtil;
+import com.example.demo.response.ApiResponse;
+import com.example.demo.constant.ApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/solicitudes")
+@RequestMapping(ApiConstants.API_BASE_PATH + "/solicitudes-efectivo")
 public class SolicitudEfectivoController {
 
     @Autowired
     private SolicitudEfectivoService solicitudEfectivoService;
 
-    // Create a new SolicitudEfectivo
+    @Autowired
+    private MapperUtil mapperUtil;
+
     @PostMapping
-    public SolicitudEfectivo createSolicitud(@RequestBody SolicitudEfectivo solicitudEfectivo) {
-        return solicitudEfectivoService.createSolicitud(solicitudEfectivo);
+    public ResponseEntity<ApiResponse<SolicitudEfectivoDTO>> createSolicitud(
+            @Valid @RequestBody SolicitudEfectivoDTO solicitudDTO) {
+        SolicitudEfectivo solicitud = mapperUtil.map(solicitudDTO, SolicitudEfectivo.class);
+        SolicitudEfectivo created = solicitudEfectivoService.createSolicitud(solicitud);
+        SolicitudEfectivoDTO dto = mapperUtil.map(created, SolicitudEfectivoDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(ApiConstants.CREATE_SUCCESS, dto));
     }
 
-    // Get all SolicitudEfectivos
     @GetMapping
-    public List<SolicitudEfectivo> getAllSolicitudes() {
-        return solicitudEfectivoService.getAllSolicitudes();
+    public ResponseEntity<ApiResponse<List<SolicitudEfectivoDTO>>> getAllSolicitudes() {
+        List<SolicitudEfectivo> solicitudes = solicitudEfectivoService.getAllSolicitudes();
+        List<SolicitudEfectivoDTO> dtos = mapperUtil.mapList(solicitudes, SolicitudEfectivoDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Solicitudes obtenidas exitosamente", dtos));
     }
 
-    // Get a single SolicitudEfectivo by ID
     @GetMapping("/{id}")
-    public ResponseEntity<SolicitudEfectivo> getSolicitudById(@PathVariable Long id) {
-        SolicitudEfectivo solicitudEfectivo = solicitudEfectivoService.getSolicitudById(id);
-        if (solicitudEfectivo == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponse<SolicitudEfectivoDTO>> getSolicitudById(@PathVariable Long id) {
+        SolicitudEfectivo solicitud = solicitudEfectivoService.getSolicitudById(id);
+        if (solicitud == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Solicitud no encontrada"));
         }
-        return ResponseEntity.ok(solicitudEfectivo);
+        SolicitudEfectivoDTO dto = mapperUtil.map(solicitud, SolicitudEfectivoDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Solicitud encontrada", dto));
     }
 
-    // Update a SolicitudEfectivo
     @PutMapping("/{id}")
-    public ResponseEntity<SolicitudEfectivo> updateSolicitud(@PathVariable Long id, @RequestBody SolicitudEfectivo solicitudEfectivo) {
-        SolicitudEfectivo updatedSolicitud = solicitudEfectivoService.updateSolicitud(id, solicitudEfectivo);
-        if (updatedSolicitud == null) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponse<SolicitudEfectivoDTO>> updateSolicitud(
+            @PathVariable Long id, @Valid @RequestBody SolicitudEfectivoDTO solicitudDTO) {
+        SolicitudEfectivo solicitud = mapperUtil.map(solicitudDTO, SolicitudEfectivo.class);
+        SolicitudEfectivo updated = solicitudEfectivoService.updateSolicitud(id, solicitud);
+        if (updated == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Solicitud no encontrada"));
         }
-        return ResponseEntity.ok(updatedSolicitud);
+        SolicitudEfectivoDTO dto = mapperUtil.map(updated, SolicitudEfectivoDTO.class);
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.UPDATE_SUCCESS, dto));
     }
 
-    // Delete a SolicitudEfectivo
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSolicitud(@PathVariable Long id) {
-        if (solicitudEfectivoService.deleteSolicitud(id)) {
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<Void>> deleteSolicitud(@PathVariable Long id) {
+        boolean deleted = solicitudEfectivoService.deleteSolicitud(id);
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Solicitud no encontrada"));
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.DELETE_SUCCESS, null));
     }
 }

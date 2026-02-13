@@ -1,58 +1,73 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ComparativoPrecioCompraDTO;
+import com.example.demo.entity.ComparativoPrecioCompra;
+import com.example.demo.service.ComparativoPrecioCompraService;
+import com.example.demo.util.MapperUtil;
+import com.example.demo.response.ApiResponse;
+import com.example.demo.constant.ApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.demo.entity.ComparativoPrecioCompra;
-import com.example.demo.repository.ComparativoPrecioCompraRepository;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/comparativo-precio-compra")
+@RequestMapping(ApiConstants.API_BASE_PATH + "/comparativo-precio-compra")
 public class ComparativoPrecioCompraController {
 
     @Autowired
-    private ComparativoPrecioCompraRepository repository;
+    private ComparativoPrecioCompraService service;
 
-    // Create a new ComparativoPrecioCompra
+    @Autowired
+    private MapperUtil mapperUtil;
+
     @PostMapping
-    public ComparativoPrecioCompra create(@RequestBody ComparativoPrecioCompra comparativoPrecioCompra) {
-        return repository.save(comparativoPrecioCompra);
+    public ResponseEntity<ApiResponse<ComparativoPrecioCompraDTO>> create(
+            @Valid @RequestBody ComparativoPrecioCompraDTO dto) {
+        ComparativoPrecioCompra entity = mapperUtil.map(dto, ComparativoPrecioCompra.class);
+        ComparativoPrecioCompra created = service.create(entity);
+        ComparativoPrecioCompraDTO resultDTO = mapperUtil.map(created, ComparativoPrecioCompraDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(ApiConstants.CREATE_SUCCESS, resultDTO));
     }
 
-    // Get all ComparativoPrecioCompra
     @GetMapping
-    public List<ComparativoPrecioCompra> getAll() {
-        return repository.findAll();
+    public ResponseEntity<ApiResponse<List<ComparativoPrecioCompraDTO>>> getAll() {
+        List<ComparativoPrecioCompra> entities = service.getAll();
+        List<ComparativoPrecioCompraDTO> dtos = mapperUtil.mapList(entities, ComparativoPrecioCompraDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Comparativos obtenidos exitosamente", dtos));
     }
 
-    // Get a ComparativoPrecioCompra by id
     @GetMapping("/{id}")
-    public ResponseEntity<ComparativoPrecioCompra> getById(@PathVariable Long id) {
-        Optional<ComparativoPrecioCompra> comparativoPrecioCompra = repository.findById(id);
-        return comparativoPrecioCompra.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ApiResponse<ComparativoPrecioCompraDTO>> getById(@PathVariable Long id) {
+        ComparativoPrecioCompra entity = service.getById(id);
+        if (entity == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Comparativo no encontrado"));
+        }
+        ComparativoPrecioCompraDTO dto = mapperUtil.map(entity, ComparativoPrecioCompraDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Comparativo encontrado", dto));
     }
 
-    // Update a ComparativoPrecioCompra
     @PutMapping("/{id}")
-    public ResponseEntity<ComparativoPrecioCompra> update(@PathVariable Long id, @RequestBody ComparativoPrecioCompra comparativoPrecioCompra) {
-        if (!repository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<ApiResponse<ComparativoPrecioCompraDTO>> update(
+            @PathVariable Long id, @Valid @RequestBody ComparativoPrecioCompraDTO dto) {
+        ComparativoPrecioCompra entity = mapperUtil.map(dto, ComparativoPrecioCompra.class);
+        ComparativoPrecioCompra updated = service.update(id, entity);
+        if (updated == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Comparativo no encontrado"));
         }
-        comparativoPrecioCompra.setId(id);
-        return ResponseEntity.ok(repository.save(comparativoPrecioCompra));
+        ComparativoPrecioCompraDTO resultDTO = mapperUtil.map(updated, ComparativoPrecioCompraDTO.class);
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.UPDATE_SUCCESS, resultDTO));
     }
 
-    // Delete a ComparativoPrecioCompra
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!repository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        repository.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.DELETE_SUCCESS, null));
     }
 }

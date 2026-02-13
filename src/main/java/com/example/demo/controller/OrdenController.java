@@ -1,52 +1,72 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.OrdenDTO;
 import com.example.demo.entity.Orden;
 import com.example.demo.service.OrdenService;
+import com.example.demo.util.MapperUtil;
+import com.example.demo.response.ApiResponse;
+import com.example.demo.constant.ApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/ordenes")
+@RequestMapping(ApiConstants.API_BASE_PATH + "/ordenes")
 public class OrdenController {
 
     @Autowired
     private OrdenService ordenService;
 
-    // Create a new Orden
+    @Autowired
+    private MapperUtil mapperUtil;
+
     @PostMapping
-    public ResponseEntity<Orden> createOrden(@RequestBody Orden orden) {
+    public ResponseEntity<ApiResponse<OrdenDTO>> createOrden(@Valid @RequestBody OrdenDTO ordenDTO) {
+        Orden orden = mapperUtil.map(ordenDTO, Orden.class);
         Orden newOrden = ordenService.save(orden);
-        return ResponseEntity.ok(newOrden);
+        OrdenDTO dto = mapperUtil.map(newOrden, OrdenDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(ApiConstants.CREATE_SUCCESS, dto));
     }
 
-    // Get an Orden by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Orden> getOrdenById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<OrdenDTO>> getOrdenById(@PathVariable Long id) {
         Orden orden = ordenService.findById(id);
-        return ResponseEntity.ok(orden);
+        if (orden == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Orden no encontrada"));
+        }
+        OrdenDTO dto = mapperUtil.map(orden, OrdenDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Orden encontrada", dto));
     }
 
-    // Get all Ordenes
     @GetMapping
-    public ResponseEntity<List<Orden>> getAllOrdenes() {
+    public ResponseEntity<ApiResponse<List<OrdenDTO>>> getAllOrdenes() {
         List<Orden> ordenes = ordenService.findAll();
-        return ResponseEntity.ok(ordenes);
+        List<OrdenDTO> dtos = mapperUtil.mapList(ordenes, OrdenDTO.class);
+        return ResponseEntity.ok(ApiResponse.success("Órdenes obtenidas exitosamente", dtos));
     }
 
-    // Update an Orden
     @PutMapping("/{id}")
-    public ResponseEntity<Orden> updateOrden(@PathVariable Long id, @RequestBody Orden ordenDetails) {
-        Orden updatedOrden = ordenService.update(id, ordenDetails);
-        return ResponseEntity.ok(updatedOrden);
+    public ResponseEntity<ApiResponse<OrdenDTO>> updateOrden(
+            @PathVariable Long id, @Valid @RequestBody OrdenDTO ordenDTO) {
+        Orden orden = mapperUtil.map(ordenDTO, Orden.class);
+        Orden updatedOrden = ordenService.update(id, orden);
+        if (updatedOrden == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponse.error("Orden no encontrada"));
+        }
+        OrdenDTO dto = mapperUtil.map(updatedOrden, OrdenDTO.class);
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.UPDATE_SUCCESS, dto));
     }
 
-    // Delete an Orden
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrden(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteOrden(@PathVariable Long id) {
         ordenService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.success(ApiConstants.DELETE_SUCCESS, null));
     }
 }
