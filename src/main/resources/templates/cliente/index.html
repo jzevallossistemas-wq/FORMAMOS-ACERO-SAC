@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Management</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Client Management</h1>
+    <form id="clientForm">
+        <input type="text" id="clientName" placeholder="Client Name" required>
+        <input type="email" id="clientEmail" placeholder="Client Email" required>
+        <button type="submit">Add Client</button>
+    </form>
+
+    <table id="clientTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Client rows will be appended here -->
+        </tbody>
+    </table>
+
+    <script>
+        const form = document.getElementById('clientForm');
+        const clientTable = document.getElementById('clientTable').getElementsByTagName('tbody')[0];
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('clientName').value;
+            const email = document.getElementById('clientEmail').value;
+            await addClient(name, email);
+            loadClients();
+        });
+
+        async function addClient(name, email) {
+            const response = await fetch('API_ENDPOINT_HERE', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email })
+            });
+            if (!response.ok) {
+                console.error('Failed to add client.');
+            }
+        }
+
+        async function loadClients() {
+            const response = await fetch('API_ENDPOINT_HERE');
+            const clients = await response.json();
+            clientTable.innerHTML = '';
+            clients.forEach(client => {
+                const row = clientTable.insertRow();
+                row.insertCell(0).textContent = client.name;
+                row.insertCell(1).textContent = client.email;
+                const actionsCell = row.insertCell(2);
+                // Add action buttons here
+            });
+        }
+
+        // Initial load of clients
+        loadClients();
+    </script>
+</body>
+</html>
