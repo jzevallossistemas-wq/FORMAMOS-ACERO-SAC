@@ -1,11 +1,9 @@
 package com.example.demo.controller;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class WebViewController {
-
     @GetMapping("/")
     public String index() {
         return "index";
@@ -13,16 +11,16 @@ public class WebViewController {
 
     @GetMapping("/cliente")
     public String clientes() {
-        return "clientes";
+        return "cliente/index";
     }
 
     @GetMapping("/proveedor")
     public String proveedores() {
-        return "proveedores";
+        return "proveedor/index";
     }
 
     @GetMapping("/orden")
     public String ordenes() {
-        return "ordenes";
+        return "orden/index";
     }
 }
