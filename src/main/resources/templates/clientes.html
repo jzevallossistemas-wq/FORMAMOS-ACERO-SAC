@@ -1,12 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes</title>
+    <title>Clientes - FORMAMOS ACERO SAC</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px 0; }
+        .navbar { background: linear-gradient(135deg, #ff9800 0%, #ff6f00 100%); padding: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .navbar .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar h1 { color: white; font-size: 28px; }
+        .nav-links { display: flex; list-style: none; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 600; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        h2 { color: white; margin-bottom: 30px; }
+        .form-section { background: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-section h3 { color: #ff9800; margin-bottom: 20px; }
+        form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        input { padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        input:focus { outline: none; border-color: #ff9800; box-shadow: 0 0 5px rgba(255,152,0,0.3); }
+        .btn { background: #ff9800; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; grid-column: 1 / -1; }
+        .btn:hover { background: #ff6f00; }
+        .table-section { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .table-section h3 { color: #ff9800; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #ff9800; color: white; padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+        tbody tr:hover { background: #f5f5f5; }
+        .btn-small { background: #f44336; color: white; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .btn-small:hover { background: #d32f2f; }
+        .loading { text-align: center; padding: 20px; color: #666; }
+        .error { background: #ffebee; color: #c62828; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .success { background: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+    </style>
 </head>
 <body>
-    <h1>Clientes</h1>
-    <p>Welcome to the clientes page.</p>
+    <nav class="navbar">
+        <div class="container">
+            <h1>FORMAMOS ACERO SAC</h1>
+            <ul class="nav-links">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/cliente">Clientes</a></li>
+                <li><a href="/proveedor">Proveedores</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="container">
+        <h2>Gestion de Clientes</h2>
+        <div class="form-section">
+            <h3>Crear Nuevo Cliente</h3>
+            <div id="mensaje"></div>
+            <form id="clienteForm">
+                <input type="text" id="nombre" placeholder="Nombre completo" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="tel" id="telefono" placeholder="Telefono" required>
+                <input type="text" id="ciudad" placeholder="Ciudad" required>
+                <input type="text" id="direccion" placeholder="Direccion">
+                <button type="submit" class="btn">Crear Cliente</button>
+            </form>
+        </div>
+        <div class="table-section">
+            <h3>Lista de Clientes</h3>
+            <table id="clientesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Ciudad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="clientesBody">
+                    <tr><td colspan="6" class="loading">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script>
+        async function loadClientes() {
+            try {
+                const response = await fetch('/api/v1/clientes');
+                const data = await response.json();
+                const tbody = document.getElementById('clientesBody');
+                tbody.innerHTML = '';
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach(cliente => {
+                        const row = '<tr><td>' + cliente.id + '</td><td>' + cliente.nombre + '</td><td>' + (cliente.email || '-') + '</td><td>' + (cliente.telefono || '-') + '</td><td>' + (cliente.ciudad || '-') + '</td><td><button class="btn-small" onclick="deleteCliente(' + cliente.id + ')">Eliminar</button></td></tr>';
+                        tbody.innerHTML += row;
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="6" class="loading">No hay clientes registrados</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('clientesBody').innerHTML = '<tr><td colspan="6" class="error">Error al cargar clientes</td></tr>';
+            }
+        }
+        document.getElementById('clienteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const mensajeDiv = document.getElementById('mensaje');
+            const cliente = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                ciudad: document.getElementById('ciudad').value,
+                direccion: document.getElementById('direccion').value
+            };
+            try {
+                const response = await fetch('/api/v1/clientes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(cliente)
+                });
+                if (response.ok) {
+                    mensajeDiv.innerHTML = '<div class="success">Cliente creado exitosamente</div>';
+                    document.getElementById('clienteForm').reset();
+                    loadClientes();
+                    setTimeout(() => mensajeDiv.innerHTML = '', 3000);
+                } else {
+                    const error = await response.json();
+                    mensajeDiv.innerHTML = '<div class="error">Error: ' + (error.message || 'Error al crear cliente') + '</div>';
+                }
+            } catch (error) {
+                mensajeDiv.innerHTML = '<div class="error">Error: ' + error.message + '</div>';
+            }
+        });
+        async function deleteCliente(id) {
+            if (confirm('Estás seguro de que deseas eliminar este cliente?')) {
+                try {
+                    const response = await fetch('/api/v1/clientes/' + id, { method: 'DELETE' });
+                    if (response.ok) {
+                        alert('Cliente eliminado exitosamente');
+                        loadClientes();
+                    } else {
+                        alert('Error al eliminar cliente');
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            }
+        }
+        loadClientes();
+    </script>
 </body>
 </html>
