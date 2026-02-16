@@ -25,29 +25,4 @@ public class WebViewController {
     public String ordenes() {
         return "ordenes";
     }
-
-    @GetMapping("/preorden")
-    public String preordenes() {
-        return "preordenes";
-    }
-
-    @GetMapping("/solicitud-efectivo")
-    public String solicitudEfectivo() {
-        return "solicitud-efectivo";
-    }
-
-    @GetMapping("/solicitud-viatico")
-    public String solicitudViatico() {
-        return "solicitud-viatico";
-    }
-
-    @GetMapping("/cotizacion-pasajes")
-    public String cotizacionPasajes() {
-        return "cotizacion-pasajes";
-    }
-
-    @GetMapping("/comparativo-precios")
-    public String comparativoPreciosPasajes() {
-        return "comparativo-precios";
-    }
 }
